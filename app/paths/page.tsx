@@ -1,3 +1,5 @@
-import {paths,articleById} from "../../lib/content";
+import {paths} from "../../lib/content";
 import {Icon} from "../ui/icons";
-export default function PathsPage(){return <div className="paths-page"><div className="page-heading"><div className="page-icon"><Icon name="route" size={30}/></div><h1>学习路径</h1></div><div className="path-list">{paths.map((p,i)=><a href={`/paths/${p.id}`} className="path-card" key={p.id}><div className="path-number">0{i+1}</div><div className="path-card-main"><div className="feature-label">{p.level}<span>·</span>{p.ids.length} 个单元</div><h2>{p.title}</h2><p>{p.summary}</p><div className="path-lessons-preview">{p.ids.slice(0,3).map(id=><span key={id}>{articleById(id)?.title}</span>)}{p.ids.length>3&&<span>…</span>}</div></div><Icon name="arrow-up-right" size={22}/></a>)}</div></div>;}
+import {LearningPathList} from "../ui/learning-map";
+
+export default function PathsPage(){return <div className="paths-page"><div className="page-heading"><div className="page-icon"><Icon name="route" size={30}/></div><h1>学习路径</h1></div><LearningPathList paths={paths}/></div>;}

@@ -3,8 +3,8 @@
     "id": "live-paper",
     "label": "论文 v2 · 表 2",
     "metric": "任务成功率",
-    "condition": "95 个任务；DeepSeek-V3 评审",
-    "url": "https://arxiv.org/html/2508.01780v2",
+    "condition": "95 个任务；MCP Copilot Agent；每次检索 Top-5；DeepSeek-V3 评审",
+    "url": "https://arxiv.org/html/2508.01780v2#S3.T2",
     "accessed": "2026-11-03",
     "note": "论文报告的历史结果。",
     "rows": [
@@ -56,26 +56,36 @@
         "model": "Qwen3-32B",
         "value": 30.53
       }
-    ]
+    ],
+    "sample_size": 95,
+    "tested_at": null,
+    "benchmark_id": "livemcpbench",
+    "source_version": "arXiv:2508.01780v2",
+    "source_locator": "Table 2 · Overall (%)"
   },
   {
     "id": "live-leaderboard",
-    "label": "官方榜单 · 2025 年快照",
+    "label": "官方榜单 · 外部入口",
     "metric": "任务成功率",
-    "condition": "榜单截图所列条件；具体配置待核验",
+    "condition": "模型配置、样本与评测时间待核验",
     "url": "https://docs.google.com/spreadsheets/d/1EXpgXq1VKw5A7l7-N2E9xt3w0eLJ2YPVPT-VrRxKZBw/edit?usp=sharing",
     "accessed": "2026-11-03",
-    "note": "官方榜单提供外部查看入口；因截图数据的再发布许可尚未确认，本地不复制成绩。具体实验配置未记录。",
-    "rows": []
+    "note": "入口可访问；榜单成绩尚未导入，配置与再发布许可待确认。",
+    "rows": [],
+    "sample_size": null,
+    "tested_at": null,
+    "benchmark_id": "livemcpbench",
+    "source_version": null,
+    "source_locator": "官方榜单外部入口"
   },
   {
     "id": "toolbench-win",
-    "label": "ToolEval · 默认评测集",
+    "label": "官方 README · Win Rate 均值",
     "metric": "Win Rate",
-    "condition": "官方页面选择项为 ChatGPT-ReACT；CSV 文件名与选择项不一致，参考口径待核实",
-    "url": "https://openbmb.github.io/ToolBench/",
+    "condition": "参考方法 ChatGPT-ReACT；I1-Inst / I1-Tool / I1-Cate / I2-Inst / I2-Cate / I3-Inst 六个子集的 Average 列",
+    "url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/README.md#main-results",
     "accessed": "2026-11-03",
-    "note": "比较对象为模型与 Agent 方法组合；Win Rate 不等于任务成功率。",
+    "note": "这是模型与 Agent 组合的相对胜率，与任务成功率不同。数据取自 README 的 Win Rate 表；网页 CSV 的子集列来自 Pass Rate 表，未按胜率使用。",
     "rows": [
       {
         "model": "GPT4-DFSDT",
@@ -95,11 +105,11 @@
       },
       {
         "model": "ToolLLaMA-DFSDT",
-        "value": 60
+        "value": 60.0
       },
       {
-        "model": "ChatGPT-ReACT",
-        "value": 50
+        "model": "ToolLLaMA-ReACT",
+        "value": 47.0
       },
       {
         "model": "Text-Davinci-003-DFSDT",
@@ -117,16 +127,21 @@
         "model": "Text-Davinci-003-ReACT",
         "value": 33.2
       }
-    ]
+    ],
+    "sample_size": null,
+    "tested_at": null,
+    "benchmark_id": "toolbench",
+    "source_version": "d56fdd89faf8c91fa135090b212bb9057ee5cfc2",
+    "source_locator": "Main Results · Win Rate · Average"
   },
   {
     "id": "human-10",
-    "label": "论文表 II · 10 个候选",
+    "label": "论文 v1 · 表 II · 10 个候选",
     "metric": "Top-1 命中率",
-    "condition": "500 条查询；每题 10 个候选工具",
-    "url": "https://arxiv.org/html/2602.23367",
+    "condition": "500 条固定查询；每题 1 个目标工具 + 9 个动态采样干扰工具",
+    "url": "https://arxiv.org/html/2602.23367v1#S5.T2",
     "accessed": "2026-11-03",
-    "note": "同一候选数条件内比较；不是端到端任务成功率。",
+    "note": "论文报告的 Top-1 精确匹配率，仅限同规模候选之间比较；该实验不执行工具。数值保留原表，逐题结果与小数口径尚未公开。",
     "rows": [
       {
         "model": "GPT-4o-mini",
@@ -140,16 +155,21 @@
         "model": "Gemini 2.0 Flash",
         "value": 98.4
       }
-    ]
+    ],
+    "sample_size": 500,
+    "tested_at": null,
+    "benchmark_id": "humanmcp",
+    "source_version": "arXiv:2602.23367v1",
+    "source_locator": "Table II · 10 Tools"
   },
   {
     "id": "human-50",
-    "label": "论文表 II · 50 个候选",
+    "label": "论文 v1 · 表 II · 50 个候选",
     "metric": "Top-1 命中率",
-    "condition": "500 条查询；每题 50 个候选工具",
-    "url": "https://arxiv.org/html/2602.23367",
+    "condition": "500 条固定查询；每题 1 个目标工具 + 49 个动态采样干扰工具",
+    "url": "https://arxiv.org/html/2602.23367v1#S5.T2",
     "accessed": "2026-11-03",
-    "note": "同一候选数条件内比较；不是端到端任务成功率。",
+    "note": "论文报告的 Top-1 精确匹配率，仅限同规模候选之间比较；该实验不执行工具。数值保留原表，逐题结果与小数口径尚未公开。",
     "rows": [
       {
         "model": "GPT-4o-mini",
@@ -163,16 +183,21 @@
         "model": "Gemini 2.0 Flash",
         "value": 93.6
       }
-    ]
+    ],
+    "sample_size": 500,
+    "tested_at": null,
+    "benchmark_id": "humanmcp",
+    "source_version": "arXiv:2602.23367v1",
+    "source_locator": "Table II · 50 Tools"
   },
   {
     "id": "human-100",
-    "label": "论文表 II · 100 个候选",
+    "label": "论文 v1 · 表 II · 100 个候选",
     "metric": "Top-1 命中率",
-    "condition": "500 条查询；每题 100 个候选工具",
-    "url": "https://arxiv.org/html/2602.23367",
+    "condition": "500 条固定查询；每题 1 个目标工具 + 99 个动态采样干扰工具",
+    "url": "https://arxiv.org/html/2602.23367v1#S5.T2",
     "accessed": "2026-11-03",
-    "note": "同一候选数条件内比较；不是端到端任务成功率。",
+    "note": "论文报告的 Top-1 精确匹配率，仅限同规模候选之间比较；该实验不执行工具。数值保留原表，逐题结果与小数口径尚未公开。",
     "rows": [
       {
         "model": "GPT-4o-mini",
@@ -186,16 +211,21 @@
         "model": "Gemini 2.0 Flash",
         "value": 88.2
       }
-    ]
+    ],
+    "sample_size": 500,
+    "tested_at": null,
+    "benchmark_id": "humanmcp",
+    "source_version": "arXiv:2602.23367v1",
+    "source_locator": "Table II · 100 Tools"
   },
   {
     "id": "zero-full",
-    "label": "论文表 · Full / 单轮 / MCP-Zero",
+    "label": "论文 v4 · 表 1 · Full / 单轮 / MCP-Zero",
     "metric": "检索准确率",
-    "condition": "API-Bank Full 测试集；单轮；MCP-Zero 方法",
-    "url": "https://arxiv.org/html/2506.01056",
+    "condition": "API-Bank level-1 转换的检索任务；Full 候选池共 48 个工具；单轮；MCP-Zero",
+    "url": "https://arxiv.org/html/2506.01056v4#S5.T1",
     "accessed": "2026-11-03",
-    "note": "论文表格使用的模型简称；以原文为准，不与任务成功率混排。",
+    "note": "48 指候选工具数，样本分母未记录；表中保留模型简称。这里是 Top-1 工具检索准确率，与 MCP-tools 的 2,797 工具实验和执行成功率是不同指标。",
     "rows": [
       {
         "model": "Claude-3.5",
@@ -209,6 +239,11 @@
         "model": "Gemini-2.5",
         "value": 96.63
       }
-    ]
+    ],
+    "sample_size": null,
+    "tested_at": null,
+    "benchmark_id": "mcp-zero",
+    "source_version": "arXiv:2506.01056v4",
+    "source_locator": "Table 1 · Single-turn / Full / MCP-Zero"
   }
 ]

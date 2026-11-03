@@ -1,7 +1,7 @@
 "use client";
 import {useState,useEffect,useRef,createContext,useContext,useCallback} from "react";
 import {usePathname} from "next/navigation";
-import {articles,categories,searchArticles,articleHref} from "../../lib/content";
+import {articles,categories,searchArticles,articleHref,paths} from "../../lib/content";
 import {Icon} from "./icons";
 import {AskPanel} from "./ask-panel";
 const AskContext=createContext<()=>void>(()=>{});
@@ -15,7 +15,9 @@ export function Shell({children}:{children:React.ReactNode}) {
  const pathname=usePathname();const [search,setSearch]=useState(false),[ask,setAsk]=useState(false),[menu,setMenu]=useState(false),[query,setQuery]=useState("");
  const closeSearch=useCallback(()=>setSearch(false),[]),closeAsk=useCallback(()=>setAsk(false),[]);
  const articleId=pathname?.startsWith("/knowledge/")?pathname.split("/")[2]:undefined;
- const article=articles.find(a=>a.id===articleId);const mode=pathname?.startsWith("/paths")?"学习路径":pathname?.startsWith("/benchmarks")||pathname?.startsWith("/replays")||pathname?.startsWith("/experiments")?"Benchmark":"知识库";
+ const [learningPathId,setLearningPathId]=useState<string>();
+ useEffect(()=>{const id=new URLSearchParams(window.location.search).get("path");setLearningPathId(paths.find(p=>p.id===id&&p.ids.includes(articleId||""))?.id);},[pathname,articleId]);
+ const article=articles.find(a=>a.id===articleId);const mode=pathname?.startsWith("/paths")||learningPathId?"学习路径":pathname?.startsWith("/benchmarks")||pathname?.startsWith("/replays")||pathname?.startsWith("/experiments")?"Benchmark":"知识库";
  useEffect(()=>{setMenu(false);},[pathname]);
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();setSearch(v=>!v);}};window.addEventListener("keydown",handler);return()=>window.removeEventListener("keydown",handler);},[]);
  return <AskContext.Provider value={()=>setAsk(true)}><div className="workspace"><a className="skip-link" href="#main">跳转到内容</a>

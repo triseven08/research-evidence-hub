@@ -1,10 +1,10 @@
 [
  {"id":"paper-workflow-demo","origin":"scripted_demo","title":"找到论文，再比较工具规模","task":"查找一项工具调用评测工作，核对它统计的是工具目录、服务器还是实际调用，并给出带来源的解释。","benchmark":"教学任务","run_id":null,"task_id":null,"attempt_id":null,"model":null,"recorded_at":null,"article_ids":["tool-discovery","planning","reading-benchmarks"],"events":[
   {"id":"e1","sequence":1,"type":"retrieve","title":"发现可用工具","tool_name":"search_tools","arguments":{"query":"论文搜索与原文读取"},"result":"候选：search_papers、read_document。先确认可以检索和读取的能力。","status":"success","duration_ms":null},
-  {"id":"e2","sequence":2,"type":"tool_call","title":"提交论文搜索","tool_name":"search_papers","arguments":{"query":"MCP tool use benchmark"},"result":"按照工具输入契约组织查询，不预先编造论文结果。","status":"success","duration_ms":null},
-  {"id":"e3","sequence":3,"type":"tool_result","title":"取得候选资料","tool_name":"search_papers","arguments":{},"result":"此教学脚本以论文 A 为候选，继续读取原文。这里没有执行真实搜索。","status":"success","duration_ms":null},
-  {"id":"e4","sequence":4,"type":"tool_call","title":"读取并核对口径","tool_name":"read_document","arguments":{"document_id":"paper-a","sections":["工具环境","评测设置"]},"result":"查找候选工具总量 N、每轮可见工具数 K，以及工具/Server 的定义。后一步依赖上一步的资料标识。","status":"success","duration_ms":null},
-  {"id":"e5","sequence":5,"type":"tool_result","title":"检查证据是否充分","tool_name":"read_document","arguments":{},"result":"若原文没有披露某个数字，应记录为未披露；不同版本的数字需要分别说明，不能混合。","status":"success","duration_ms":null},
-  {"id":"e6","sequence":6,"type":"final_answer","title":"整理答案与来源","tool_name":null,"arguments":{},"result":"工具目录规模、Server 数、每题可见工具数与调用次数不是同一个指标。这个预设案例展示发现、依赖和证据检查，不产生 benchmark 成绩。","status":"success","duration_ms":null}
+  {"id":"e2","sequence":2,"type":"tool_call","title":"提交论文搜索","tool_name":"search_papers","arguments":{"query":"MCP tool use benchmark"},"result":"按工具参数格式组织查询。","status":"success","duration_ms":null},
+  {"id":"e3","sequence":3,"type":"tool_result","title":"取得候选资料","tool_name":"search_papers","arguments":{},"result":"教学脚本以论文 A 为候选，读取原文。","status":"success","duration_ms":null},
+  {"id":"e4","sequence":4,"type":"tool_call","title":"读取并核对口径","tool_name":"read_document","arguments":{"document_id":"paper-a","sections":["工具环境","评测设置"]},"result":"查找候选工具总量 N、每轮可见工具数 K，以及工具和 Server 的定义。后一步依赖上一步的资料标识。","status":"success","duration_ms":null},
+  {"id":"e5","sequence":5,"type":"tool_result","title":"检查证据是否充分","tool_name":"read_document","arguments":{},"result":"原文未披露的数字记为未披露，不同版本分别标注。","status":"success","duration_ms":null},
+  {"id":"e6","sequence":6,"type":"final_answer","title":"整理答案与来源","tool_name":null,"arguments":{},"result":"工具目录规模、Server 数、每题可见工具数和调用次数是不同指标。这个案例展示发现、依赖与证据检查。","status":"success","duration_ms":null}
  ]}
 ]

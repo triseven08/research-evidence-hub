@@ -12,6 +12,8 @@ benchmark 展示保留预先录制的工具调用回放：查看任务的工具�
 
 视觉采用 [Notion Style](https://www.stylekit.top/zh/styles/notion-style)。内容优先，通过布局、留白和排版表达层次，删除不必要的副标题、说明与装饰。
 
+学习路径以关卡地图组织已有文章，每关配一道概念题，答对后记录完成并推荐下一关。进度存于当前浏览器的 localStorage，无需登录；各关仍可自由阅读。从路径进入文章后，上一关、下一关和返回地图均保留所选路径。题目维护在 `lib/learning-paths.ts`。
+
 前端使用 React / TypeScript 与 Vinext，内容保存在 JSON，额度与缓存保存在 Cloudflare D1。生成服务使用 DeepSeek，密钥只放服务端。正式环境每位访客 100 次/日、3 次/分钟，全站预算上限 5 美元/日，输出上限 2000 tokens。本地可选择测试额度，浏览器不能切换配置。
 
 跨页面跳转使用浏览器原生链接。发布构建曾出现客户端路由拦截点击后抛错，导致文章、学习路径等入口无响应；无需依赖该路由完成阅读跳转。验证导航时须使用生产构建并实际单击，不能仅检查页面地址返回 200。
@@ -35,6 +37,8 @@ npm run dev -- --port 5173 --hostname 127.0.0.1
 ## 内容与实验
 
 审核后的正文维护在 `content/articles.json` 和 `content/benchmarks.json`，外部成绩快照在 `content/benchmark-results.json`，作者轨迹摘要在 `content/author-replays.json`，学习路径在 `lib/content.ts`。仅 `review_status=reviewed` 的文章进入检索；原始调研附件不直接公开。
+
+四项 benchmark 已对照固定版本来源核验，具体差异见 [资料清单](docs/资料清单.md#2026-11-03-内容核验)。成绩保留表格位置、样本量及未知运行时间；回放区分事件返回状态、作者评审和本站内容核对。ToolBench 成绩采用 README 的明确 Win Rate 表，避免官网 CSV 子集列的指标混用。
 
 团队自行评测属于可选扩展，并非首版必交成果。若团队未来进行评测，可将脱敏后的 `{experiment,replays}` JSON 交给平台，数据结构见 `lib/experiments.ts`；`tests/experiments.test.ts` 中的 fixture 只用于校验，不发布为成绩。
 

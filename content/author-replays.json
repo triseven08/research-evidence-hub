@@ -3,7 +3,7 @@
     "id": "live-arxiv",
     "origin": "author_record",
     "title": "找到一篇论文并介绍它",
-    "task": "用户要求介绍 arXiv 论文 2203.12277。评测关注 Agent 能否找到相关工具、获取论文信息并给出介绍；任务标注还提出读取全文。",
+    "task": "介绍 arXiv 论文 2203.12277。",
     "benchmark": "LiveMCPBench",
     "run_id": null,
     "task_id": "7bda47e8-1b8b-4f1f-b67c-573a81417d36",
@@ -23,11 +23,13 @@
         "title": "检索论文工具",
         "tool_name": "route",
         "arguments": {
-          "query": "arxiv 或学术论文检索；根据论文 ID 获取信息"
+          "query": "<tool_assistant>\nserver: arxiv or academic paper retrieval\ntool: get paper information or retrieve arxiv paper by ID\n</tool_assistant>"
         },
-        "result": "模型向 route 提出能力需求：寻找可以通过 arXiv ID 获取论文信息的工具。这里搜索的是工具目录，而不是直接搜索论文正文。",
+        "result": "向路由工具请求根据 arXiv ID 获取论文信息的能力；参数保留原始查询。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/26/messages/2",
+        "call_id": "toolu_01U874JN1RaCJpbH6GFjUAmE"
       },
       {
         "id": "e2",
@@ -36,33 +38,43 @@
         "title": "返回候选工具",
         "tool_name": "route",
         "arguments": {},
-        "result": "route 返回 mcp-simple-arxiv 下的多个候选，包括能按 paper_id 获取论文元数据和摘要的 get_paper_data。模型可据此决定后续调用；返回候选不等于论文信息已获取。",
+        "result": "候选包括 mcp-simple-arxiv 的 get_paper_data，支持根据 paper_id 获取论文信息。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/26/messages/3",
+        "call_id": "toolu_01U874JN1RaCJpbH6GFjUAmE"
       },
       {
         "id": "e3",
         "sequence": 3,
         "type": "tool_call",
         "title": "查询论文",
-        "tool_name": "get_paper_data",
+        "tool_name": "execute-tool",
         "arguments": {
-          "paper_id": "2203.12277"
+          "server_name": "mcp-simple-arxiv",
+          "tool_name": "get_paper_data",
+          "params": {
+            "paper_id": "2203.12277"
+          }
         },
-        "result": "模型选择 mcp-simple-arxiv 的 get_paper_data，并传入 paper_id 2203.12277。执行框架负责调用具体工具；论文 ID 是本题关键参数。",
+        "result": "通过 execute-tool 调用 mcp-simple-arxiv 的 get_paper_data。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/26/messages/4",
+        "call_id": "toolu_01APnXwaYUfACukMPRbd8yqU"
       },
       {
         "id": "e4",
         "sequence": 4,
         "type": "tool_result",
         "title": "返回论文信息",
-        "tool_name": "get_paper_data",
+        "tool_name": "execute-tool",
         "arguments": {},
-        "result": "工具返回标题、作者、发布时间、摘要和全文访问地址。它提供的是论文元数据和摘要；记录中没有后续调用 fetch 读取全文的事件。",
+        "result": "返回论文标题 Unified Structure Generation for Universal Information Extraction 及作者、日期等信息。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/26/messages/5",
+        "call_id": "toolu_01APnXwaYUfACukMPRbd8yqU"
       },
       {
         "id": "e5",
@@ -71,17 +83,28 @@
         "title": "整理论文介绍",
         "tool_name": null,
         "arguments": {},
-        "result": "模型根据返回信息介绍 UIE 框架及实验。作者公开的 DeepSeek-V3 评审把此题标为成功；任务标注包含读取全文，但此轨迹没有可见的全文读取调用，自动评审成功不等于每个标注步骤都发生。",
+        "result": "模型依据工具返回的论文信息，整理标题、作者、方法与实验概述。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/26/messages/6"
       }
-    ]
+    ],
+    "source_version": "36a51a1065dda49c1e503b87edf33a1e0b331a74",
+    "verified_at": "2026-11-03",
+    "source_locator": "/26 · task_id=7bda47e8-1b8b-4f1f-b67c-573a81417d36",
+    "evaluation": {
+      "status": "success",
+      "basis": "author_evaluation",
+      "summary": "作者用 DeepSeek-V3-0324 评审，记录 reward=1。",
+      "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/evaluator/output/deepseek_deepseek-chat-v3-0324/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+      "source_locator": "/26 · 同一 task_id"
+    }
   },
   {
     "id": "toolbench-tree",
     "origin": "author_record",
     "title": "从 API 列表中查找机构",
-    "task": "用户要求列出可用报关机构，并查找 Gondrand 机构的联系方式。该案例来自作者公开调用树的一条路径，包含机构列表、单条详情查询与最终回答。",
+    "task": "查询新喀里多尼亚 Gondrand 报关机构的联系方式，并列出全部可用机构。",
     "benchmark": "ToolBench",
     "run_id": null,
     "task_id": "10-ChatGPT-DFSDT",
@@ -101,9 +124,11 @@
         "title": "查询机构列表",
         "tool_name": "transitaires_for_transitaires",
         "arguments": {},
-        "result": "模型先调用 transitaires_for_transitaires 请求全部机构列表。此步骤目的是找到后续查询所需的机构标识；作者提供的样例已给出候选 API，不能据此声称发生了开域检索。",
+        "result": "模型调用机构列表接口。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/description",
+        "call_id": "call-list"
       },
       {
         "id": "e2",
@@ -112,9 +137,11 @@
         "title": "返回多个机构",
         "tool_name": "transitaires_for_transitaires",
         "arguments": {},
-        "result": "工具返回多家机构及其标识。这里保留结果类型而省略联系方式；列表返回成功只说明接口有响应，并不代表已经定位用户指定的 Gondrand。",
+        "result": "接口返回多家机构的记录；联系方式和其他个人信息已省略。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/observation",
+        "call_id": "call-list"
       },
       {
         "id": "e3",
@@ -125,9 +152,11 @@
         "arguments": {
           "is_id": "ACT_AGENCE_CALEDONIENNE_DE_TRANSIT"
         },
-        "result": "模型使用 ACT_AGENCE_CALEDONIENNE_DE_TRANSIT 作为 is_id 调用详情接口。它查询的是 ACT，而任务要求 Gondrand；这个参数选择是理解最终答案偏差的关键。",
+        "result": "模型选择 ACT 对应的机构 ID 发起查询。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/description",
+        "call_id": "call-detail"
       },
       {
         "id": "e4",
@@ -136,9 +165,11 @@
         "title": "返回机构详情",
         "tool_name": "transitaire_for_transitaires",
         "arguments": {},
-        "result": "接口返回 ACT 的机构详情。工具正常返回和模型选对目标是两件不同的事：该结果对应 ACT，不能直接当作 Gondrand 的资料。",
+        "result": "接口返回所选机构详情；联系方式已省略。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/observation",
+        "call_id": "call-detail"
       },
       {
         "id": "e5",
@@ -146,12 +177,25 @@
         "type": "final_answer",
         "title": "提交最终回答",
         "tool_name": "Finish",
-        "arguments": {},
-        "result": "最终回答将 ACT 的联系方式写成所请求的 Gondrand 信息，也没有完整列出机构。原始节点仅说明该路径输出了回答；本展示指出可见的目标不匹配，不额外推断官方评分。",
+        "arguments": {
+          "return_type": "give_answer"
+        },
+        "result": "Finish 返回了 ACT 的联系方式，没有回答 Gondrand，也没有列出全部机构。联系方式已省略。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/description"
       }
-    ]
+    ],
+    "source_version": "d56fdd89faf8c91fa135090b212bb9057ee5cfc2",
+    "verified_at": "2026-11-03",
+    "source_locator": "answer_generation.query / final_answer；tree.tree 的单条分支",
+    "evaluation": {
+      "status": "failure",
+      "basis": "editorial_review",
+      "summary": "对照原始任务与最终回答：机构不匹配，且缺少完整列表。原文件 win=true 不构成独立 ToolEval 评分，不计入榜单成绩。",
+      "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G1_answer/10_ChatGPT_DFS_woFilter_w2.json",
+      "source_locator": "answer_generation.query / final_answer"
+    }
   },
   {
     "id": "live-parking",
@@ -179,9 +223,11 @@
         "arguments": {
           "query": "地图服务：查找地标附近停车场与景点"
         },
-        "result": "模型主动提出需要查找停车和附近景点的能力。这里查询的是工具目录，并非搜索结果。",
+        "result": "模型提出查找停车和附近景点的能力需求。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/2",
+        "call_id": "call-route"
       },
       {
         "id": "e2",
@@ -192,7 +238,9 @@
         "arguments": {},
         "result": "检索器返回 osm-mcp-server 等候选，其中包含查找停车设施与附近地点的工具。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/3",
+        "call_id": "call-route"
       },
       {
         "id": "e3",
@@ -207,7 +255,9 @@
         },
         "result": "模型以给定坐标为中心，设置 1000 米半径查询停车设施。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/4",
+        "call_id": "call-parking"
       },
       {
         "id": "e4",
@@ -216,9 +266,11 @@
         "title": "停车结果为空",
         "tool_name": "find_parking_facilities",
         "arguments": {},
-        "result": "工具正常返回，但停车设施列表为空、数量为 0；这不证明现实中一定没有停车设施。",
+        "result": "工具正常返回，停车设施列表为空，数量为 0。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/5",
+        "call_id": "call-parking"
       },
       {
         "id": "e5",
@@ -238,7 +290,9 @@
         },
         "result": "模型再搜索旅游、设施、商店和历史地点，中心点与停车查询相同。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/6",
+        "call_id": "call-nearby"
       },
       {
         "id": "e6",
@@ -249,7 +303,9 @@
         "arguments": {},
         "result": "工具返回分类地点，例如九龙壁等；地点结果包含坐标。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/7",
+        "call_id": "call-nearby"
       },
       {
         "id": "e7",
@@ -258,11 +314,22 @@
         "title": "回答与评审",
         "tool_name": null,
         "arguments": {},
-        "result": "模型说明没有查询到停车设施并推荐附近地点；作者公开 DeepSeek-V3 评审标为失败，理由包括缺少具体停车信息及地点地址。工具无结果可能影响结果，但日志不足以断定现实世界没有停车场。",
+        "result": "模型说明没有查到停车设施，并推荐附近地点。作者评审标为失败，理由是缺少具体停车信息和地点地址。",
         "status": "failure",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/2/messages/8"
       }
-    ]
+    ],
+    "source_version": "36a51a1065dda49c1e503b87edf33a1e0b331a74",
+    "verified_at": "2026-11-03",
+    "source_locator": "baseline/output · task_id=dda8ea55-629c-4ae8-ab87-0c81477ae615",
+    "evaluation": {
+      "status": "failure",
+      "basis": "author_evaluation",
+      "summary": "作者用 DeepSeek-V3-0324 评审，记录 reward=0。",
+      "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/evaluator/output/deepseek_deepseek-chat-v3-0324/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+      "source_locator": "task_id=dda8ea55-629c-4ae8-ab87-0c81477ae615 · 同一评审文件"
+    }
   },
   {
     "id": "toolbench-giveup",
@@ -291,9 +358,11 @@
         "arguments": {
           "tracking_number": "GHI789"
         },
-        "result": "模型用任务提供的运单号调用包裹追踪接口。该案例已给模型提供 API，不代表开域检索步骤。",
+        "result": "模型用任务提供的运单号调用包裹追踪接口。该案例已提供 API，不涉及开域检索。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/description",
+        "call_id": "call-package"
       },
       {
         "id": "e2",
@@ -304,7 +373,9 @@
         "arguments": {},
         "result": "接口返回未找到追踪信息，无法据此获得包裹当前状态和位置。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/observation",
+        "call_id": "call-package"
       },
       {
         "id": "e3",
@@ -317,7 +388,9 @@
         },
         "result": "模型使用同一运单号改查另一追踪接口，尝试补充状态。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/description",
+        "call_id": "call-tracking"
       },
       {
         "id": "e4",
@@ -328,7 +401,9 @@
         "arguments": {},
         "result": "第二个追踪接口的响应内容为空，未提供可用的状态或位置。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/observation",
+        "call_id": "call-tracking"
       },
       {
         "id": "e5",
@@ -341,7 +416,9 @@
         },
         "result": "模型使用用户提供的邮编查询地址。",
         "status": "success",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/description",
+        "call_id": "call-postcode"
       },
       {
         "id": "e6",
@@ -350,9 +427,11 @@
         "title": "地址查询超时",
         "tool_name": "retorna_dados_do_endere_o_atrav_s_do_cep_for_cep_brazil",
         "arguments": {},
-        "result": "工具返回超时错误且响应为空；日志显示的是该次接口超时，不足以判断邮编本身是否有效。",
+        "result": "工具返回超时错误，响应为空；这次超时不足以判断邮编是否有效。",
         "status": "failure",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/observation",
+        "call_id": "call-postcode"
       },
       {
         "id": "e7",
@@ -363,184 +442,21 @@
         "arguments": {
           "return_type": "give_up_and_restart"
         },
-        "result": "模型以 give_up_and_restart 结束该次尝试，没有给出用户要求的状态、位置和地址。公开样例的 win 为 false；这不是经独立 ToolEval 核验的逐题评分。",
+        "result": "模型以 give_up_and_restart 结束，没有给出要求的状态、位置和地址。公开样例 win=false，未找到独立 ToolEval 逐题评分。",
         "status": "failure",
-        "duration_ms": null
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/children/0/description"
       }
-    ]
-  },
-  {
-    "id": "live-sales-chart",
-    "origin": "author_record",
-    "title": "销售数据制图",
-    "task": "读取指定 Excel 文件中的电子产品销售数据，按月份绘制柱状图，并将图片保存到指定路径。",
-    "benchmark": "LiveMCPBench",
-    "run_id": null,
-    "task_id": "4de2e9f7-f3ea-4d02-8532-0a1b0b530609",
-    "attempt_id": null,
-    "model": "Claude-Sonnet-4-20250514",
-    "recorded_at": null,
-    "article_ids": [
-      "tool-discovery",
-      "planning",
-      "reading-benchmarks"
     ],
-    "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/baseline/output/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
-    "events": [
-      {
-        "id": "e1",
-        "sequence": 1,
-        "type": "retrieve",
-        "title": "寻找读取与制图能力",
-        "tool_name": "route",
-        "arguments": {},
-        "result": "Agent 连续检索读取 Excel、绘制柱状图及保存图片的工具；这里是多次检索的摘要。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e2",
-        "sequence": 2,
-        "type": "tool_call",
-        "title": "首次尝试读取表格",
-        "tool_name": "excel_read",
-        "arguments": {
-          "server_name": "searxng"
-        },
-        "result": "Agent 使用候选工具读取 Excel，但工具返回“Unknown tool: excel_read”。这是一次失败调用，不代表文件内容已被读取。",
-        "status": "failure",
-        "duration_ms": null
-      },
-      {
-        "id": "e3",
-        "sequence": 3,
-        "type": "retrieve",
-        "title": "重新查找读取方式",
-        "tool_name": "route",
-        "arguments": {},
-        "result": "初次读取失败后，Agent 又尝试其他文件读取方式，并继续检索处理 Excel 的工具。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e4",
-        "sequence": 4,
-        "type": "tool_call",
-        "title": "检查工作表结构",
-        "tool_name": "excel_describe_sheets",
-        "arguments": {
-          "server_name": "excel"
-        },
-        "result": "通过 Excel Server 查看文件和工作表结构，以确定下一步读取范围。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e5",
-        "sequence": 5,
-        "type": "tool_call",
-        "title": "读取数据区域",
-        "tool_name": "excel_read_sheet",
-        "arguments": {
-          "sheetName": "Sheet1",
-          "range": "A1:E14"
-        },
-        "result": "读取 Sheet1 的指定单元格区域，获得按月销售数据；后续绘图依赖这一步。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e6",
-        "sequence": 6,
-        "type": "tool_call",
-        "title": "生成柱状图",
-        "tool_name": "generate_bar_chart",
-        "arguments": {
-          "server_name": "mcp-server-chart"
-        },
-        "result": "将整理后的月度数据交给图表工具。工具返回图像 URL，而不是直接生成指定路径下的文件。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e7",
-        "sequence": 7,
-        "type": "tool_call",
-        "title": "尝试获取图像",
-        "tool_name": "fetch",
-        "arguments": {},
-        "result": "Agent 尝试从返回的 URL 获取图像，结果遇到 robots.txt 限制，未能据此完成指定位置的保存。",
-        "status": "failure",
-        "duration_ms": null
-      },
-      {
-        "id": "e8",
-        "sequence": 8,
-        "type": "retrieve",
-        "title": "继续查找保存方式",
-        "tool_name": "route",
-        "arguments": {},
-        "result": "Agent 多次检索保存文件或运行代码的能力，决定使用系统工具完成文件写入。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e9",
-        "sequence": 9,
-        "type": "tool_call",
-        "title": "创建输出目录",
-        "tool_name": "create_directory",
-        "arguments": {
-          "path": "/root/figs"
-        },
-        "result": "创建图表输出目录，准备保存结果。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e10",
-        "sequence": 10,
-        "type": "tool_call",
-        "title": "尝试启动 Python",
-        "tool_name": "start_process",
-        "arguments": {},
-        "result": "前两次启动交互式 Python 的调用超时；这是恢复过程中可观察到的失败。",
-        "status": "failure",
-        "duration_ms": null
-      },
-      {
-        "id": "e11",
-        "sequence": 11,
-        "type": "tool_call",
-        "title": "用脚本保存图表",
-        "tool_name": "start_process",
-        "arguments": {},
-        "result": "Agent 改为直接执行生成柱状图的脚本，工具返回图片已保存。这里仅展示操作摘要，不执行脚本。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e12",
-        "sequence": 12,
-        "type": "tool_result",
-        "title": "检查输出文件",
-        "tool_name": "start_process",
-        "arguments": {},
-        "result": "随后列出输出目录，工具返回中可见 sale.png 文件。这验证文件存在，但不单独证明图表内容完全正确。",
-        "status": "success",
-        "duration_ms": null
-      },
-      {
-        "id": "e13",
-        "sequence": 13,
-        "type": "final_answer",
-        "title": "总结结果并交由评审",
-        "tool_name": null,
-        "arguments": {},
-        "result": "模型告知用户已保存图表。作者公开的 DeepSeek-V3 评审将该任务判为成功；本站没有重新运行或复核文件内容。",
-        "status": "success",
-        "duration_ms": null
-      }
-    ]
+    "source_version": "d56fdd89faf8c91fa135090b212bb9057ee5cfc2",
+    "verified_at": "2026-11-03",
+    "source_locator": "answer_generation.final_answer / tree.tree 的单条分支",
+    "evaluation": {
+      "status": "failure",
+      "basis": "editorial_review",
+      "summary": "对照原始任务与最终回答：模型放弃，未提供状态、位置和地址。原文件 win=false，未找到独立 ToolEval 逐题评分，不计入榜单成绩。",
+      "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G2_answer/10_ChatGPT_DFS_woFilter_w2.json",
+      "source_locator": "answer_generation.final_answer / tree.tree"
+    }
   }
 ]
