@@ -1,0 +1,185 @@
+[
+  {
+    "id": "live-bib-failure",
+    "origin": "author_record",
+    "title": "文献列表格式转换",
+    "task": "读取给定的 BibTeX 文献列表，将参考文献转换为 APA 格式，并保存为指定的 Word 文档。",
+    "benchmark": "LiveMCPBench",
+    "run_id": null,
+    "task_id": "71a7a42a-54af-4552-ad9b-d36f4912cc1c",
+    "attempt_id": null,
+    "model": "Claude-Sonnet-4-20250514",
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "planning",
+      "reading-benchmarks"
+    ],
+    "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/baseline/output/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "查找文献与文档工具",
+        "tool_name": "route",
+        "arguments": {},
+        "result": "模型多次寻找 BibTeX 处理、文件读取和 Word 创建相关工具；相邻检索在这里合并展示。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_call",
+        "title": "尝试读取文件",
+        "tool_name": "get_text_file_contents",
+        "arguments": {},
+        "result": "第一次调用缺少 file_path；补充参数后再次调用又缺少 ranges，均返回输入校验错误。",
+        "status": "failure",
+        "duration_ms": null
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "尝试另一读取工具",
+        "tool_name": "read_content",
+        "arguments": {},
+        "result": "模型改用 basic-memory 读取文件，工具返回数据库错误。",
+        "status": "failure",
+        "duration_ms": null
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "tool_call",
+        "title": "修正读取范围",
+        "tool_name": "get_text_file_contents",
+        "arguments": {
+          "ranges": [
+            {
+              "start": 1,
+              "end": 1000
+            }
+          ]
+        },
+        "result": "模型在一次范围字段错误后调整参数，工具返回文献文件内容。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e5",
+        "sequence": 5,
+        "type": "retrieve",
+        "title": "继续查找 Word 写入能力",
+        "tool_name": "route",
+        "arguments": {},
+        "result": "模型继续查找创建或写入 Word 文件的工具。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e6",
+        "sequence": 6,
+        "type": "tool_call",
+        "title": "尝试写入文档",
+        "tool_name": "edit_text_file_contents",
+        "arguments": {},
+        "result": "模型多次尝试不同参数写入文献内容，接口先后报告缺少 path 或 file_hash 等参数；这里合并连续失败尝试。",
+        "status": "failure",
+        "duration_ms": null
+      },
+      {
+        "id": "e7",
+        "sequence": 7,
+        "type": "final_answer",
+        "title": "仅返回格式化文本",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模型最终在回答中提供 APA 文本，并表示无法直接创建所需 Word 文档。作者公开评审记录为失败，但没有给出详细评审理由。",
+        "status": "failure",
+        "duration_ms": null
+      }
+    ]
+  },
+  {
+    "id": "toolbench-training-joke",
+    "origin": "author_record",
+    "title": "笑话与数字性质查询",
+    "task": "用户要求获取一条随机笑话，同时查找数字 1729 的一条有趣的数学性质。",
+    "benchmark": "ToolBench",
+    "run_id": null,
+    "task_id": "train-row-11",
+    "attempt_id": null,
+    "model": "未记录（ToolBench 训练轨迹）",
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "planning",
+      "reading-benchmarks"
+    ],
+    "source_url": "https://huggingface.co/datasets/Yhyu13/ToolBench_toolllama_G123_dfs/blob/d85025b41bba280e7b3d7edb5edeb4982c71cc32/toolllama_G123_dfs_train.json",
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "tool_call",
+        "title": "查询随机笑话",
+        "tool_name": "jokes_random_for_chuck_norris",
+        "arguments": {},
+        "result": "记录中的模型调用笑话接口，不提供参数。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "接收笑话",
+        "tool_name": "jokes_random_for_chuck_norris",
+        "arguments": {},
+        "result": "接口返回了一条 Chuck Norris 笑话；本站只说明结果类型，省略原文。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "查询数字性质",
+        "tool_name": "get_math_fact_for_numbers",
+        "arguments": {
+          "number": "1729"
+        },
+        "result": "模型使用第二个接口查询数字 1729 的数学知识。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "tool_result",
+        "title": "接收数学知识",
+        "tool_name": "get_math_fact_for_numbers",
+        "arguments": {},
+        "result": "接口返回：1729 是最小的能以两种不同方式表示为两个正整数立方和的数。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e5",
+        "sequence": 5,
+        "type": "final_answer",
+        "title": "给出两项结果",
+        "tool_name": "Finish",
+        "arguments": {
+          "return_type": "give_answer"
+        },
+        "result": "最终回答同时提供了笑话和 1729 的数学性质。本站依据可见轨迹判断两项要求均有回应；未发现独立 ToolEval 评分。",
+        "status": "success",
+        "duration_ms": null
+      }
+    ]
+  }
+]
