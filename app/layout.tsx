@@ -4,7 +4,7 @@ import { Shell } from "./ui/shell";
 
 export const metadata: Metadata = {
   title: "研知台 · Agent 知识探索",
-  description: "理解 Agent 如何发现工具、规划行动与完成任务。知识、学习路径与可查看的调用过程。",
+  description: "看懂 Agent 如何发现工具、规划行动、完成任务。知识、学习路径，以及可逐步查看的调用过程。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

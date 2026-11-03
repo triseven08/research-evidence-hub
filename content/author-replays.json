@@ -95,7 +95,7 @@
     "evaluation": {
       "status": "success",
       "basis": "author_evaluation",
-      "summary": "作者 DeepSeek-V3-0324 评审记录 reward=1；仅代表该评审器的判断。",
+      "summary": "作者用 DeepSeek-V3-0324 评审，记录 reward=1。",
       "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/evaluator/output/deepseek_deepseek-chat-v3-0324/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
       "source_locator": "/26 · 同一 task_id"
     }
@@ -180,7 +180,7 @@
         "arguments": {
           "return_type": "give_answer"
         },
-        "result": "Finish 返回 ACT 的联系方式，未回答所请求的 Gondrand，也未列出全部机构。联系方式已省略；此处仅表示最终回答已返回。",
+        "result": "Finish 返回了 ACT 的联系方式，没有回答 Gondrand，也没有列出全部机构。联系方式已省略。",
         "status": "success",
         "duration_ms": null,
         "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/description"
@@ -192,7 +192,7 @@
     "evaluation": {
       "status": "failure",
       "basis": "editorial_review",
-      "summary": "本站对照原始任务和最终回答：机构不匹配且缺少完整列表。原文件 win=true 不是独立 ToolEval 评分凭据，本结论不计入任何榜单成绩。",
+      "summary": "对照原始任务与最终回答：机构不匹配，且缺少完整列表。原文件 win=true 不构成独立 ToolEval 评分，不计入榜单成绩。",
       "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G1_answer/10_ChatGPT_DFS_woFilter_w2.json",
       "source_locator": "answer_generation.query / final_answer"
     }
