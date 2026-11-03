@@ -9,7 +9,9 @@ export const replaySchema=z.object({
  id,origin:z.enum(["scripted_demo","recorded_run","author_record"]),title:text,task:text,benchmark:text,
  run_id:id.nullable(),task_id:id.nullable(),attempt_id:id.nullable(),model:nullableText,
  recorded_at:z.string().datetime({offset:true}).nullable(),article_ids:z.array(id),source_url:url.optional(),
- events:z.array(z.object({id,sequence:z.number().int().positive(),type:z.enum(["retrieve","tool_call","tool_result","final_answer","error"]),title:text,tool_name:nullableText,arguments:z.record(z.unknown()),result:text,status:z.enum(["success","failure","pending"]),duration_ms:z.number().nonnegative().nullable(),call_id:id.optional(),depends_on:z.array(id).optional(),offset_ms:z.number().nonnegative().optional()}).strict()).min(1).max(2000),
+ source_version:z.string().regex(/^[a-f0-9]{40}$/).optional(),source_locator:text.optional(),verified_at:z.string().date().optional(),
+ evaluation:z.object({status:z.enum(["success","failure","unverified"]),basis:z.enum(["author_evaluation","editorial_review"]),summary:text,source_url:url,source_locator:text}).strict().optional(),
+ events:z.array(z.object({id,sequence:z.number().int().positive(),type:z.enum(["retrieve","tool_call","tool_result","final_answer","error"]),title:text,tool_name:nullableText,arguments:z.record(z.unknown()),result:text,status:z.enum(["success","failure","pending"]),duration_ms:z.number().nonnegative().nullable(),call_id:id.optional(),depends_on:z.array(id).optional(),offset_ms:z.number().nonnegative().optional(),source_pointer:z.string().startsWith("/").optional()}).strict()).min(1).max(2000),
 }).strict().superRefine((r,ctx)=>{
  if(r.origin==="recorded_run"&&(!r.run_id||!r.task_id||!r.attempt_id||!r.model||!r.recorded_at))ctx.addIssue({code:"custom",message:"真实回放必须关联运行、任务、尝试、模型和录制时间"});
  if(r.origin==="scripted_demo"&&(r.run_id||r.task_id||r.attempt_id||r.model||r.recorded_at))ctx.addIssue({code:"custom",message:"教学演示不能伪造真实运行元数据"});

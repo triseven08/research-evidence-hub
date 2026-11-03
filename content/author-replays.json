@@ -1,16 +1,200 @@
 [
- {"id":"live-arxiv","origin":"author_record","title":"找到一篇论文并介绍它","task":"介绍 arXiv 论文 2203.12277。","benchmark":"LiveMCPBench","run_id":null,"task_id":"7bda47e8-1b8b-4f1f-b67c-573a81417d36","attempt_id":null,"model":"Claude-Sonnet-4-20250514","recorded_at":null,"article_ids":["tool-discovery","reading-benchmarks"],"source_url":"https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/baseline/output/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json","events":[
-  {"id":"e1","sequence":1,"type":"retrieve","title":"检索论文工具","tool_name":"route","arguments":{"query":"arxiv 或学术论文检索；根据论文 ID 获取信息"},"result":"模型请求能够依据 arXiv ID 获取论文信息的工具。此处为原始英文查询的中文摘要。","status":"success","duration_ms":null},
-  {"id":"e2","sequence":2,"type":"tool_result","title":"返回候选工具","tool_name":"route","arguments":{},"result":"候选包括 mcp-simple-arxiv 的 get_paper_data，支持根据 paper_id 获取论文信息。","status":"success","duration_ms":null},
-  {"id":"e3","sequence":3,"type":"tool_call","title":"查询论文","tool_name":"get_paper_data","arguments":{"paper_id":"2203.12277"},"result":"通过 mcp-simple-arxiv 查询指定论文。","status":"success","duration_ms":null},
-  {"id":"e4","sequence":4,"type":"tool_result","title":"返回论文信息","tool_name":"get_paper_data","arguments":{},"result":"返回论文标题 Unified Structure Generation for Universal Information Extraction 及作者、日期等信息。","status":"success","duration_ms":null},
-  {"id":"e5","sequence":5,"type":"final_answer","title":"整理论文介绍","tool_name":null,"arguments":{},"result":"模型依据返回信息介绍论文。作者公开的 DeepSeek-V3 评审将此题标为成功；这不代表团队进行了实测。","status":"success","duration_ms":null}
- ]},
- {"id":"toolbench-tree","origin":"author_record","title":"从 API 列表中查找机构","task":"查询指定报关机构的联系方式，并列出可用机构。","benchmark":"ToolBench","run_id":null,"task_id":"10-ChatGPT-DFSDT","attempt_id":null,"model":"ChatGPT-DFSDT","recorded_at":null,"article_ids":["tool-discovery","reading-benchmarks"],"source_url":"https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G1_answer/10_ChatGPT_DFS_woFilter_w2.json","events":[
-  {"id":"e1","sequence":1,"type":"tool_call","title":"查询机构列表","tool_name":"transitaires_for_transitaires","arguments":{},"result":"模型调用机构列表接口。","status":"success","duration_ms":null},
-  {"id":"e2","sequence":2,"type":"tool_result","title":"返回多个机构","tool_name":"transitaires_for_transitaires","arguments":{},"result":"接口返回多家机构的记录；联系方式和其他个人信息已省略。","status":"success","duration_ms":null},
-  {"id":"e3","sequence":3,"type":"tool_call","title":"查询一条机构记录","tool_name":"transitaire_for_transitaires","arguments":{"is_id":"ACT_AGENCE_CALEDONIENNE_DE_TRANSIT"},"result":"模型选择 ACT 对应的机构 ID 发起查询。","status":"success","duration_ms":null},
-  {"id":"e4","sequence":4,"type":"tool_result","title":"返回机构详情","tool_name":"transitaire_for_transitaires","arguments":{},"result":"接口返回所选机构详情；联系方式已省略。","status":"success","duration_ms":null},
-  {"id":"e5","sequence":5,"type":"final_answer","title":"提交最终回答","tool_name":"Finish","arguments":{},"result":"最终回答把 ACT 的详情作为所请求机构的联系方式，且未列出全部机构。工具返回成功不代表任务答案正确。此为公开轨迹的单条路径摘要。","status":"success","duration_ms":null}
- ]}
+  {
+    "id": "live-arxiv",
+    "origin": "author_record",
+    "title": "找到一篇论文并介绍它",
+    "task": "介绍 arXiv 论文 2203.12277。",
+    "benchmark": "LiveMCPBench",
+    "run_id": null,
+    "task_id": "7bda47e8-1b8b-4f1f-b67c-573a81417d36",
+    "attempt_id": null,
+    "model": "Claude-Sonnet-4-20250514",
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/baseline/output/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "检索论文工具",
+        "tool_name": "route",
+        "arguments": {
+          "query": "<tool_assistant>\nserver: arxiv or academic paper retrieval\ntool: get paper information or retrieve arxiv paper by ID\n</tool_assistant>"
+        },
+        "result": "向路由工具请求根据 arXiv ID 获取论文信息的能力；参数保留原始查询。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/26/messages/2",
+        "call_id": "toolu_01U874JN1RaCJpbH6GFjUAmE"
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "返回候选工具",
+        "tool_name": "route",
+        "arguments": {},
+        "result": "候选包括 mcp-simple-arxiv 的 get_paper_data，支持根据 paper_id 获取论文信息。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/26/messages/3",
+        "call_id": "toolu_01U874JN1RaCJpbH6GFjUAmE"
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "查询论文",
+        "tool_name": "execute-tool",
+        "arguments": {
+          "server_name": "mcp-simple-arxiv",
+          "tool_name": "get_paper_data",
+          "params": {
+            "paper_id": "2203.12277"
+          }
+        },
+        "result": "通过 execute-tool 调用 mcp-simple-arxiv 的 get_paper_data。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/26/messages/4",
+        "call_id": "toolu_01APnXwaYUfACukMPRbd8yqU"
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "tool_result",
+        "title": "返回论文信息",
+        "tool_name": "execute-tool",
+        "arguments": {},
+        "result": "返回论文标题 Unified Structure Generation for Universal Information Extraction 及作者、日期等信息。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/26/messages/5",
+        "call_id": "toolu_01APnXwaYUfACukMPRbd8yqU"
+      },
+      {
+        "id": "e5",
+        "sequence": 5,
+        "type": "final_answer",
+        "title": "整理论文介绍",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模型依据工具返回的论文信息，整理标题、作者、方法与实验概述。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/26/messages/6"
+      }
+    ],
+    "source_version": "36a51a1065dda49c1e503b87edf33a1e0b331a74",
+    "verified_at": "2026-11-03",
+    "source_locator": "/26 · task_id=7bda47e8-1b8b-4f1f-b67c-573a81417d36",
+    "evaluation": {
+      "status": "success",
+      "basis": "author_evaluation",
+      "summary": "作者 DeepSeek-V3-0324 评审记录 reward=1；仅代表该评审器的判断。",
+      "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/evaluator/output/deepseek_deepseek-chat-v3-0324/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+      "source_locator": "/26 · 同一 task_id"
+    }
+  },
+  {
+    "id": "toolbench-tree",
+    "origin": "author_record",
+    "title": "从 API 列表中查找机构",
+    "task": "查询新喀里多尼亚 Gondrand 报关机构的联系方式，并列出全部可用机构。",
+    "benchmark": "ToolBench",
+    "run_id": null,
+    "task_id": "10-ChatGPT-DFSDT",
+    "attempt_id": null,
+    "model": "ChatGPT-DFSDT",
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G1_answer/10_ChatGPT_DFS_woFilter_w2.json",
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "tool_call",
+        "title": "查询机构列表",
+        "tool_name": "transitaires_for_transitaires",
+        "arguments": {},
+        "result": "模型调用机构列表接口。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/description",
+        "call_id": "call-list"
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "返回多个机构",
+        "tool_name": "transitaires_for_transitaires",
+        "arguments": {},
+        "result": "接口返回多家机构的记录；联系方式和其他个人信息已省略。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/observation",
+        "call_id": "call-list"
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "查询一条机构记录",
+        "tool_name": "transitaire_for_transitaires",
+        "arguments": {
+          "is_id": "ACT_AGENCE_CALEDONIENNE_DE_TRANSIT"
+        },
+        "result": "模型选择 ACT 对应的机构 ID 发起查询。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/description",
+        "call_id": "call-detail"
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "tool_result",
+        "title": "返回机构详情",
+        "tool_name": "transitaire_for_transitaires",
+        "arguments": {},
+        "result": "接口返回所选机构详情；联系方式已省略。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/observation",
+        "call_id": "call-detail"
+      },
+      {
+        "id": "e5",
+        "sequence": 5,
+        "type": "final_answer",
+        "title": "提交最终回答",
+        "tool_name": "Finish",
+        "arguments": {
+          "return_type": "give_answer"
+        },
+        "result": "Finish 返回 ACT 的联系方式，未回答所请求的 Gondrand，也未列出全部机构。联系方式已省略；此处仅表示最终回答已返回。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/description"
+      }
+    ],
+    "source_version": "d56fdd89faf8c91fa135090b212bb9057ee5cfc2",
+    "verified_at": "2026-11-03",
+    "source_locator": "answer_generation.query / final_answer；tree.tree 的单条分支",
+    "evaluation": {
+      "status": "failure",
+      "basis": "editorial_review",
+      "summary": "本站对照原始任务和最终回答：机构不匹配且缺少完整列表。原文件 win=true 不是独立 ToolEval 评分凭据，本结论不计入任何榜单成绩。",
+      "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G1_answer/10_ChatGPT_DFS_woFilter_w2.json",
+      "source_locator": "answer_generation.query / final_answer"
+    }
+  }
 ]

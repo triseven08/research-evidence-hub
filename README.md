@@ -36,6 +36,8 @@ npm run dev -- --port 5173 --hostname 127.0.0.1
 
 审核后的正文维护在 `content/articles.json` 和 `content/benchmarks.json`，外部成绩快照在 `content/benchmark-results.json`，作者轨迹摘要在 `content/author-replays.json`，学习路径在 `lib/content.ts`。仅 `review_status=reviewed` 的文章进入检索；原始调研附件不直接公开。
 
+四项 benchmark 已对照固定版本来源核验，具体差异见 [资料清单](docs/资料清单.md#2026-11-03-内容核验)。成绩保留表格位置、样本量及未知运行时间；回放区分事件返回状态、作者评审和本站内容核对。ToolBench 成绩采用 README 的明确 Win Rate 表，避免官网 CSV 子集列的指标混用。
+
 团队自行评测属于可选扩展，并非首版必交成果。若团队未来进行评测，可将脱敏后的 `{experiment,replays}` JSON 交给平台，数据结构见 `lib/experiments.ts`；`tests/experiments.test.ts` 中的 fixture 只用于校验，不发布为成绩。
 
 ```powershell
