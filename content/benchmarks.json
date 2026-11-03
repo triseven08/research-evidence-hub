@@ -1,6 +1,113 @@
 [
- {"id":"livemcpbench","name":"LiveMCPBench","tag":"MCP · 端到端","summary":"在大量 MCP 工具中主动检索、组合调用，完成动态任务。","scope":"95 个日常任务；工具库 70 个 Server、527 个工具。","candidates":"主实验每次检索返回 Top-5；工具总数不是每次可见工具数。","control":"Agent 自主发起 Route 并生成查询；检索器返回候选，Agent 可调用并再次检索。","metric":"DeepSeek-V3 根据任务、关键点、工具轨迹和最终回答判断成功或失败。","limits":"实时工具和模型评审都可能出错。论文 v2 与官方榜单的模型集合不同，不直接合并。","steps":["提出任务","主动检索工具","调用并读取返回","继续检索与执行","回答与评审"],"origin":"作者公开轨迹","source":"https://arxiv.org/html/2508.01780v2","sourceTitle":"论文 v2 · §2–3","official":"https://docs.google.com/spreadsheets/d/1EXpgXq1VKw5A7l7-N2E9xt3w0eLJ2YPVPT-VrRxKZBw/edit?usp=sharing","case":"live-arxiv","results":["live-paper","live-leaderboard"]},
- {"id":"toolbench","name":"ToolBench / ToolEval","tag":"REST API · 工具使用","summary":"以大型 API 工具库研究工具检索、调用与任务完成。","scope":"项目统计 3,451 个工具、16,464 个 API；数据集总数不是单题候选数。","candidates":"开域检索、预给工具及 G1/G2/G3 等设置不同，需按具体实验区分。","control":"开域设置由检索器先从用户查询召回工具，再交给 Agent；Agent 根据方法规划和调用。","metric":"ToolEval 提供 Pass Rate 与相对参考方法的 Win Rate；两者不可混同。","limits":"公开 API 的历史响应不保证仍可用；模型、Agent 方法、参考方案及测试子集共同影响结果。","steps":["用户任务","检索候选 API","模型选择和调用","读取 API 返回","任务结果评估"],"origin":"作者公开轨迹","source":"https://github.com/OpenBMB/ToolBench","sourceTitle":"ToolBench 官方仓库","official":"https://openbmb.github.io/ToolBench/","case":"toolbench-tree","results":["toolbench-win"]},
- {"id":"humanmcp","name":"HumanMCP","tag":"MCP · 工具检索","summary":"研究不同表达方式的用户查询，能否匹配正确的 MCP 工具。","scope":"基于约 2,800 工具和 308 个 Server；查询由模型按用户画像生成，并非直接采集真人日志。","candidates":"论文基线每次提供 10、50 或 100 个候选；另有 500–2,000 工具的扩展实验。","control":"直接选择：模型从给定工具中选；RAG 设置：检索器先从 2,000 个工具召回 Top-10，再交模型选择。","metric":"Top-1 命中率衡量是否选中目标工具；RAG 同时报告 Top-10 召回情况。","limits":"仅做工具选择而非真实执行；不同候选数量与方法的成绩不能混排。查询为合成文本。","steps":["用户查询","候选工具池","直接选择或预检索","模型选工具","匹配目标"],"origin":"论文机制示意","source":"https://arxiv.org/html/2602.23367","sourceTitle":"论文 · §IV–V","official":null,"case":null,"results":["human-10","human-50","human-100"]},
- {"id":"mcp-zero","name":"MCP-tools / MCP-Zero","tag":"MCP · 主动发现","summary":"研究模型主动提出能力需求，如何通过分层检索发现 MCP 工具。","scope":"MCP-tools 是包含 308 个 Server、2,797 个工具的数据集；MCP-Zero 是主动发现方法。","candidates":"针找针实验改变候选工具规模，最大到 2,797；不同任务与实验应分别阅读。","control":"模型提出工具需求；检索器先匹配 Server 再匹配工具，Agent 可按需再次请求。","metric":"论文分别报告检索表现、模型方法对照和 token 消耗；检索结果不能当作任务成功率。","limits":"MCP-tools 检索实验与 API-Bank 调用实验不是同一数据集；本次未取得逐题模型运行轨迹。","steps":["用户任务","模型提出需求","分层匹配 Server","匹配工具","按需再次发现"],"origin":"论文机制示意","source":"https://arxiv.org/html/2506.01056","sourceTitle":"论文 · §3–5","official":null,"case":null,"results":["zero-full"]}
+  {
+    "id": "livemcpbench",
+    "name": "LiveMCPBench",
+    "tag": "MCP · 端到端",
+    "summary": "在大量 MCP 工具中主动检索、组合调用，完成动态任务。",
+    "scope": "95 个日常任务；工具库 70 个 Server、527 个工具。",
+    "candidates": "主实验每轮检索 5 个候选；527 个工具不会一次性全部出现。",
+    "control": "Agent 自己发起 Route、生成查询；检索器返回候选，Agent 可调用，也可再次检索。",
+    "metric": "DeepSeek-V3 结合任务、关键点、工具轨迹和最终回答，判断任务成败。",
+    "limits": "实时工具和模型评审都会带来波动；论文 v2 与官方榜单的模型集合不同，两者分开呈现。",
+    "steps": [
+      "提出任务",
+      "主动检索工具",
+      "调用并读取返回",
+      "继续检索与执行",
+      "回答与评审"
+    ],
+    "origin": "作者公开轨迹",
+    "source": "https://arxiv.org/html/2508.01780v2",
+    "sourceTitle": "论文 v2 · §2–3",
+    "official": "https://docs.google.com/spreadsheets/d/1EXpgXq1VKw5A7l7-N2E9xt3w0eLJ2YPVPT-VrRxKZBw/edit?usp=sharing",
+    "case": "live-arxiv",
+    "results": [
+      "live-paper",
+      "live-leaderboard"
+    ],
+    "verified_at": "2026-11-03"
+  },
+  {
+    "id": "toolbench",
+    "name": "ToolBench / ToolEval",
+    "tag": "REST API · 工具使用",
+    "summary": "用大型 API 工具库研究工具检索、调用和任务完成。",
+    "scope": "项目共 3,451 个工具、16,464 个 API；单题只会看到其中一部分候选。",
+    "candidates": "开域检索、预给工具与 G1/G2/G3 设置各不相同，成绩按实验分别查看。",
+    "control": "开域设置先由检索器按用户查询召回工具，再交给 Agent 规划、调用。",
+    "metric": "ToolEval 给出 Pass Rate 和相对参考方法的 Win Rate，两种口径分开看。",
+    "limits": "公开 API 可能已经失效；成绩还会受模型、Agent 方法、参考方案和测试子集影响。",
+    "steps": [
+      "用户任务",
+      "检索候选 API",
+      "模型选择和调用",
+      "读取 API 返回",
+      "任务结果评估"
+    ],
+    "origin": "作者公开轨迹",
+    "source": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/README.md",
+    "sourceTitle": "官方 README · d56fdd89",
+    "official": "https://openbmb.github.io/ToolBench/",
+    "case": "toolbench-tree",
+    "results": [
+      "toolbench-win"
+    ],
+    "verified_at": "2026-11-03"
+  },
+  {
+    "id": "humanmcp",
+    "name": "HumanMCP",
+    "tag": "MCP · 工具检索",
+    "summary": "看不同表达方式的用户查询能否匹配到正确的 MCP 工具。",
+    "scope": "覆盖约 2,800 个工具、308 个 Server；查询由模型按用户画像生成。",
+    "candidates": "论文基线每次提供 10、50 或 100 个候选；另有 500–2,000 工具的扩展实验。",
+    "control": "直接选择时，模型从给定工具中挑；RAG 设置先从 2,000 个工具召回 Top-10，再交给模型。",
+    "metric": "Top-1 命中率衡量是否选中目标工具；RAG 同时报告 Top-10 召回。",
+    "limits": "只测工具选择，不执行工具；候选规模不同的成绩分开比较。查询是模型合成的文本。",
+    "steps": [
+      "用户查询",
+      "候选工具池",
+      "直接选择或预检索",
+      "模型选工具",
+      "匹配目标"
+    ],
+    "origin": "论文机制示意",
+    "source": "https://arxiv.org/html/2602.23367v1",
+    "sourceTitle": "论文 v1 · §IV–V",
+    "official": null,
+    "case": null,
+    "results": [
+      "human-10",
+      "human-50",
+      "human-100"
+    ],
+    "verified_at": "2026-11-03"
+  },
+  {
+    "id": "mcp-zero",
+    "name": "MCP-tools / MCP-Zero",
+    "tag": "MCP · 主动发现",
+    "summary": "模型主动提出能力需求，再通过分层检索发现 MCP 工具。",
+    "scope": "MCP-tools 是包含 308 个 Server、2,797 个工具的数据集；MCP-Zero 是主动发现方法。",
+    "candidates": "针找针实验把候选工具规模拉到 2,797；不同任务与实验分开看。",
+    "control": "模型提出工具需求；检索器先匹配 Server 再匹配工具，Agent 可按需再次请求。",
+    "metric": "论文分别报告检索表现、方法对照和 token 消耗；检索表现与任务成功率分开统计。",
+    "limits": "MCP-tools 与 API-Bank 是两组实验：表中 API-Bank 把 level-1 转成 48 个工具的检索任务，不执行真实调用。",
+    "steps": [
+      "用户任务",
+      "模型提出需求",
+      "分层匹配 Server",
+      "匹配工具",
+      "按需再次发现"
+    ],
+    "origin": "论文机制示意",
+    "source": "https://arxiv.org/html/2506.01056v4",
+    "sourceTitle": "论文 v4 · §3–5",
+    "official": null,
+    "case": null,
+    "results": [
+      "zero-full"
+    ],
+    "verified_at": "2026-11-03"
+  }
 ]
