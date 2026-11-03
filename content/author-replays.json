@@ -196,5 +196,267 @@
       "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G1_answer/10_ChatGPT_DFS_woFilter_w2.json",
       "source_locator": "answer_generation.query / final_answer"
     }
+  },
+  {
+    "id": "live-parking",
+    "origin": "author_record",
+    "title": "故宫周边停车与游览",
+    "task": "用户计划游览北京故宫，希望找到 1 公里范围内的停车位置和有趣的活动或景点。",
+    "benchmark": "LiveMCPBench",
+    "run_id": null,
+    "task_id": "dda8ea55-629c-4ae8-ab87-0c81477ae615",
+    "attempt_id": null,
+    "model": "Claude-Sonnet-4-20250514",
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/baseline/output/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "检索地图工具",
+        "tool_name": "route",
+        "arguments": {
+          "query": "地图服务：查找地标附近停车场与景点"
+        },
+        "result": "模型提出查找停车和附近景点的能力需求。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/2",
+        "call_id": "call-route"
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "返回工具候选",
+        "tool_name": "route",
+        "arguments": {},
+        "result": "检索器返回 osm-mcp-server 等候选，其中包含查找停车设施与附近地点的工具。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/3",
+        "call_id": "call-route"
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "查找停车设施",
+        "tool_name": "find_parking_facilities",
+        "arguments": {
+          "latitude": 39.9163,
+          "longitude": 116.3972,
+          "radius": 1000
+        },
+        "result": "模型以给定坐标为中心，设置 1000 米半径查询停车设施。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/4",
+        "call_id": "call-parking"
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "tool_result",
+        "title": "停车结果为空",
+        "tool_name": "find_parking_facilities",
+        "arguments": {},
+        "result": "工具正常返回，停车设施列表为空，数量为 0。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/5",
+        "call_id": "call-parking"
+      },
+      {
+        "id": "e5",
+        "sequence": 5,
+        "type": "tool_call",
+        "title": "查找附近地点",
+        "tool_name": "find_nearby_places",
+        "arguments": {
+          "radius": 1000,
+          "categories": [
+            "tourism",
+            "amenity",
+            "shop",
+            "historic"
+          ],
+          "limit": 50
+        },
+        "result": "模型再搜索旅游、设施、商店和历史地点，中心点与停车查询相同。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/6",
+        "call_id": "call-nearby"
+      },
+      {
+        "id": "e6",
+        "sequence": 6,
+        "type": "tool_result",
+        "title": "返回附近地点",
+        "tool_name": "find_nearby_places",
+        "arguments": {},
+        "result": "工具返回分类地点，例如九龙壁等；地点结果包含坐标。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/7",
+        "call_id": "call-nearby"
+      },
+      {
+        "id": "e7",
+        "sequence": 7,
+        "type": "final_answer",
+        "title": "回答与评审",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模型说明没有查到停车设施，并推荐附近地点。作者评审标为失败，理由是缺少具体停车信息和地点地址。",
+        "status": "failure",
+        "duration_ms": null,
+        "source_pointer": "/2/messages/8"
+      }
+    ],
+    "source_version": "36a51a1065dda49c1e503b87edf33a1e0b331a74",
+    "verified_at": "2026-11-03",
+    "source_locator": "baseline/output · task_id=dda8ea55-629c-4ae8-ab87-0c81477ae615",
+    "evaluation": {
+      "status": "failure",
+      "basis": "author_evaluation",
+      "summary": "作者用 DeepSeek-V3-0324 评审，记录 reward=0。",
+      "source_url": "https://github.com/icip-cas/LiveMCPBench/blob/36a51a1065dda49c1e503b87edf33a1e0b331a74/evaluator/output/deepseek_deepseek-chat-v3-0324/claude-sonnet-4-20250514_Qwen3-Embedding-0.6B.json",
+      "source_locator": "task_id=dda8ea55-629c-4ae8-ab87-0c81477ae615 · 同一评审文件"
+    }
+  },
+  {
+    "id": "toolbench-giveup",
+    "origin": "author_record",
+    "title": "包裹与邮编查询",
+    "task": "用户为慈善活动追踪捐赠包裹 GHI789，需要最新状态和位置，并要求用邮编 24680 查询场地地址。",
+    "benchmark": "ToolBench",
+    "run_id": null,
+    "task_id": "G2-10",
+    "attempt_id": null,
+    "model": "ChatGPT-DFSDT",
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "planning",
+      "reading-benchmarks"
+    ],
+    "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G2_answer/10_ChatGPT_DFS_woFilter_w2.json",
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "tool_call",
+        "title": "查询包裹",
+        "tool_name": "track_package_for_amex_australia_fastway_australia_tracking",
+        "arguments": {
+          "tracking_number": "GHI789"
+        },
+        "result": "模型用任务提供的运单号调用包裹追踪接口。该案例已提供 API，不涉及开域检索。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/description",
+        "call_id": "call-package"
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "未找到追踪信息",
+        "tool_name": "track_package_for_amex_australia_fastway_australia_tracking",
+        "arguments": {},
+        "result": "接口返回未找到追踪信息，无法据此获得包裹当前状态和位置。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/observation",
+        "call_id": "call-package"
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "尝试另一追踪接口",
+        "tool_name": "latest_for_suivi_colis",
+        "arguments": {
+          "colisid": "GHI789"
+        },
+        "result": "模型使用同一运单号改查另一追踪接口，尝试补充状态。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/description",
+        "call_id": "call-tracking"
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "tool_result",
+        "title": "第二次返回为空",
+        "tool_name": "latest_for_suivi_colis",
+        "arguments": {},
+        "result": "第二个追踪接口的响应内容为空，未提供可用的状态或位置。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/observation",
+        "call_id": "call-tracking"
+      },
+      {
+        "id": "e5",
+        "sequence": 5,
+        "type": "tool_call",
+        "title": "按邮编查地址",
+        "tool_name": "retorna_dados_do_endere_o_atrav_s_do_cep_for_cep_brazil",
+        "arguments": {
+          "cepnumber": "24680"
+        },
+        "result": "模型使用用户提供的邮编查询地址。",
+        "status": "success",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/description",
+        "call_id": "call-postcode"
+      },
+      {
+        "id": "e6",
+        "sequence": 6,
+        "type": "tool_result",
+        "title": "地址查询超时",
+        "tool_name": "retorna_dados_do_endere_o_atrav_s_do_cep_for_cep_brazil",
+        "arguments": {},
+        "result": "工具返回超时错误，响应为空；这次超时不足以判断邮编是否有效。",
+        "status": "failure",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/observation",
+        "call_id": "call-postcode"
+      },
+      {
+        "id": "e7",
+        "sequence": 7,
+        "type": "final_answer",
+        "title": "模型放弃该次尝试",
+        "tool_name": "Finish",
+        "arguments": {
+          "return_type": "give_up_and_restart"
+        },
+        "result": "模型以 give_up_and_restart 结束，没有给出要求的状态、位置和地址。公开样例 win=false，未找到独立 ToolEval 逐题评分。",
+        "status": "failure",
+        "duration_ms": null,
+        "source_pointer": "/tree/tree/children/0/children/0/children/0/children/0/children/0/children/0/children/0/description"
+      }
+    ],
+    "source_version": "d56fdd89faf8c91fa135090b212bb9057ee5cfc2",
+    "verified_at": "2026-11-03",
+    "source_locator": "answer_generation.final_answer / tree.tree 的单条分支",
+    "evaluation": {
+      "status": "failure",
+      "basis": "editorial_review",
+      "summary": "对照原始任务与最终回答：模型放弃，未提供状态、位置和地址。原文件 win=false，未找到独立 ToolEval 逐题评分，不计入榜单成绩。",
+      "source_url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/data_example/answer/G2_answer/10_ChatGPT_DFS_woFilter_w2.json",
+      "source_locator": "answer_generation.final_answer / tree.tree"
+    }
   }
 ]

@@ -1,0 +1,272 @@
+[
+  {
+    "id": "human-demo-success",
+    "origin": "scripted_demo",
+    "title": "检索任务教学示例",
+    "task": "教学假设：用户需要在 GitHub 上搜索代码仓库；给定若干工具候选，目标是选中 search_repositories。该查询、候选与目标是为讲解构造的，不是已核验的 HumanMCP 任务。",
+    "benchmark": "HumanMCP",
+    "run_id": null,
+    "task_id": null,
+    "attempt_id": null,
+    "model": null,
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "提供用户查询",
+        "tool_name": null,
+        "arguments": {
+          "query": "搜索 GitHub 上的代码仓库"
+        },
+        "result": "将用户查询交给系统。此案例为教学构造，不是从 HumanMCP 任务集中读取的原题。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "构造候选工具",
+        "tool_name": null,
+        "arguments": {},
+        "result": "假设候选包含 search_repositories、get_file_contents 和 create_issue；为讲解省略其余干扰工具。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "选择候选工具",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模拟选择一个最符合查询的工具。HumanMCP 基线是工具选择任务，并不实际执行选中的工具。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "final_answer",
+        "title": "假设选对目标",
+        "tool_name": null,
+        "arguments": {
+          "selected": "search_repositories",
+          "target": "search_repositories"
+        },
+        "result": "教学假设：选择结果与预设目标相同，因此按照 Top-1 精确匹配口径记为命中。没有真实模型输出。",
+        "status": "success",
+        "duration_ms": null
+      }
+    ]
+  },
+  {
+    "id": "human-demo-failure",
+    "origin": "scripted_demo",
+    "title": "检索任务教学示例",
+    "task": "教学假设：用户需要在 GitHub 上搜索代码仓库；给定若干工具候选，目标是选中 search_repositories。该查询、候选与目标是为讲解构造的，不是已核验的 HumanMCP 任务。",
+    "benchmark": "HumanMCP",
+    "run_id": null,
+    "task_id": null,
+    "attempt_id": null,
+    "model": null,
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "提供用户查询",
+        "tool_name": null,
+        "arguments": {
+          "query": "搜索 GitHub 上的代码仓库"
+        },
+        "result": "将用户查询交给系统。此案例为教学构造，不是从 HumanMCP 任务集中读取的原题。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "tool_result",
+        "title": "构造候选工具",
+        "tool_name": null,
+        "arguments": {},
+        "result": "假设候选包含 search_repositories、get_file_contents 和 create_issue；为讲解省略其余干扰工具。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "tool_call",
+        "title": "选择候选工具",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模拟选择一个最符合查询的工具。HumanMCP 基线是工具选择任务，并不实际执行选中的工具。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "final_answer",
+        "title": "假设选错工具",
+        "tool_name": null,
+        "arguments": {
+          "selected": "get_file_contents",
+          "target": "search_repositories"
+        },
+        "result": "教学假设：读取文件工具与预设的仓库搜索目标不同，因此 Top-1 未命中。没有真实模型输出。",
+        "status": "failure",
+        "duration_ms": null
+      }
+    ]
+  },
+  {
+    "id": "zero-demo-success",
+    "origin": "scripted_demo",
+    "title": "检索任务教学示例",
+    "task": "官方 matcher 测试输入描述了“搜索 GitHub 上符合条件的代码仓库”。本站以此输入构造教学演示：假设检索目标为 search_repositories；目标及预测不是已核验的官方实验记录。",
+    "benchmark": "MCP-tools / MCP-Zero",
+    "run_id": null,
+    "task_id": null,
+    "attempt_id": null,
+    "model": null,
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "提出工具需求",
+        "tool_name": null,
+        "arguments": {
+          "server": "GitHub",
+          "task": "搜索特定条件的代码仓库"
+        },
+        "result": "该需求取自 MCP-Zero 仓库 test_cases.jsonl 的 github_repo_search 测试输入；这里只展示公开输入的摘要。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "retrieve",
+        "title": "匹配 Server",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模拟按服务需求匹配 GitHub Server。这里没有调用真实检索器，也没有记录相似度分数。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "retrieve",
+        "title": "匹配工具",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模拟在候选 Server 中选择具体工具。官方测试文件没有附带对应的匹配输出，本页面以下结果均为构造。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "final_answer",
+        "title": "假设检索命中",
+        "tool_name": null,
+        "arguments": {
+          "selected": "search_repositories",
+          "target": "search_repositories"
+        },
+        "result": "假设系统返回 search_repositories，且假设该工具为目标：因此本教学示例判为命中。官方测试输入未提供本结果。",
+        "status": "success",
+        "duration_ms": null
+      }
+    ]
+  },
+  {
+    "id": "zero-demo-failure",
+    "origin": "scripted_demo",
+    "title": "检索任务教学示例",
+    "task": "官方 matcher 测试输入描述了“搜索 GitHub 上符合条件的代码仓库”。本站以此输入构造教学演示：假设检索目标为 search_repositories；目标及预测不是已核验的官方实验记录。",
+    "benchmark": "MCP-tools / MCP-Zero",
+    "run_id": null,
+    "task_id": null,
+    "attempt_id": null,
+    "model": null,
+    "recorded_at": null,
+    "article_ids": [
+      "tool-discovery",
+      "reading-benchmarks"
+    ],
+    "events": [
+      {
+        "id": "e1",
+        "sequence": 1,
+        "type": "retrieve",
+        "title": "提出工具需求",
+        "tool_name": null,
+        "arguments": {
+          "server": "GitHub",
+          "task": "搜索特定条件的代码仓库"
+        },
+        "result": "该需求取自 MCP-Zero 仓库 test_cases.jsonl 的 github_repo_search 测试输入；这里只展示公开输入的摘要。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e2",
+        "sequence": 2,
+        "type": "retrieve",
+        "title": "匹配 Server",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模拟按服务需求匹配 GitHub Server。这里没有调用真实检索器，也没有记录相似度分数。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e3",
+        "sequence": 3,
+        "type": "retrieve",
+        "title": "匹配工具",
+        "tool_name": null,
+        "arguments": {},
+        "result": "模拟在候选 Server 中选择具体工具。官方测试文件没有附带对应的匹配输出，本页面以下结果均为构造。",
+        "status": "success",
+        "duration_ms": null
+      },
+      {
+        "id": "e4",
+        "sequence": 4,
+        "type": "final_answer",
+        "title": "假设检索未命中",
+        "tool_name": null,
+        "arguments": {
+          "selected": "get_file_contents",
+          "target": "search_repositories"
+        },
+        "result": "假设系统返回 get_file_contents，而预设目标是 search_repositories：本教学示例未命中。官方测试输入未提供本结果。",
+        "status": "failure",
+        "duration_ms": null
+      }
+    ]
+  }
+]
