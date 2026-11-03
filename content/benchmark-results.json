@@ -67,10 +67,10 @@
     "id": "live-leaderboard",
     "label": "官方榜单 · 外部入口",
     "metric": "任务成功率",
-    "condition": "具体模型配置、样本与评测时间未核验",
+    "condition": "模型配置、样本与评测时间待核验",
     "url": "https://docs.google.com/spreadsheets/d/1EXpgXq1VKw5A7l7-N2E9xt3w0eLJ2YPVPT-VrRxKZBw/edit?usp=sharing",
     "accessed": "2026-11-03",
-    "note": "已核验官方入口可访问；未导入榜单成绩，具体实验配置与再发布许可尚未核验。",
+    "note": "入口可访问；榜单成绩尚未导入，配置与再发布许可待确认。",
     "rows": [],
     "sample_size": null,
     "tested_at": null,
@@ -85,7 +85,7 @@
     "condition": "参考方法 ChatGPT-ReACT；I1-Inst / I1-Tool / I1-Cate / I2-Inst / I2-Cate / I3-Inst 六个子集的 Average 列",
     "url": "https://github.com/OpenBMB/ToolBench/blob/d56fdd89faf8c91fa135090b212bb9057ee5cfc2/README.md#main-results",
     "accessed": "2026-11-03",
-    "note": "模型与 Agent 方法组合的比较偏好率，不是任务成功率。采用 README 的 Win Rate 表；网页 CSV 的子集列与该版本 Pass Rate 表相同，不作为子集胜率使用。",
+    "note": "这是模型与 Agent 组合的相对胜率，与任务成功率不同。数据取自 README 的 Win Rate 表；网页 CSV 的子集列来自 Pass Rate 表，未按胜率使用。",
     "rows": [
       {
         "model": "GPT4-DFSDT",
@@ -141,7 +141,7 @@
     "condition": "500 条固定查询；每题 1 个目标工具 + 9 个动态采样干扰工具",
     "url": "https://arxiv.org/html/2602.23367v1#S5.T2",
     "accessed": "2026-11-03",
-    "note": "论文报告的 Top-1 精确匹配率，只能在同一候选规模内比较；不执行工具。保留原表数值，逐题结果与小数精度口径未公开核验。",
+    "note": "论文报告的 Top-1 精确匹配率，仅限同规模候选之间比较；该实验不执行工具。数值保留原表，逐题结果与小数口径尚未公开。",
     "rows": [
       {
         "model": "GPT-4o-mini",
@@ -169,7 +169,7 @@
     "condition": "500 条固定查询；每题 1 个目标工具 + 49 个动态采样干扰工具",
     "url": "https://arxiv.org/html/2602.23367v1#S5.T2",
     "accessed": "2026-11-03",
-    "note": "论文报告的 Top-1 精确匹配率，只能在同一候选规模内比较；不执行工具。保留原表数值，逐题结果与小数精度口径未公开核验。",
+    "note": "论文报告的 Top-1 精确匹配率，仅限同规模候选之间比较；该实验不执行工具。数值保留原表，逐题结果与小数口径尚未公开。",
     "rows": [
       {
         "model": "GPT-4o-mini",
@@ -197,7 +197,7 @@
     "condition": "500 条固定查询；每题 1 个目标工具 + 99 个动态采样干扰工具",
     "url": "https://arxiv.org/html/2602.23367v1#S5.T2",
     "accessed": "2026-11-03",
-    "note": "论文报告的 Top-1 精确匹配率，只能在同一候选规模内比较；不执行工具。保留原表数值，逐题结果与小数精度口径未公开核验。",
+    "note": "论文报告的 Top-1 精确匹配率，仅限同规模候选之间比较；该实验不执行工具。数值保留原表，逐题结果与小数口径尚未公开。",
     "rows": [
       {
         "model": "GPT-4o-mini",
@@ -225,7 +225,7 @@
     "condition": "API-Bank level-1 转换的检索任务；Full 候选池共 48 个工具；单轮；MCP-Zero",
     "url": "https://arxiv.org/html/2506.01056v4#S5.T1",
     "accessed": "2026-11-03",
-    "note": "48 是工具数，非测试样本数；样本分母未记录。表中保留模型简称。这是 Top-1 工具检索准确率，不是 MCP-tools 的 2,797 工具实验或执行成功率。",
+    "note": "48 指候选工具数，样本分母未记录；表中保留模型简称。这里是 Top-1 工具检索准确率，与 MCP-tools 的 2,797 工具实验和执行成功率是不同指标。",
     "rows": [
       {
         "model": "Claude-3.5",
