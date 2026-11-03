@@ -10,5 +10,5 @@ export function Catalog(){const params=useSearchParams();const paramCategory=par
  <div className="filter-tabs" role="group" aria-label="按主题筛选">{["全部",...categories].map(c=><button key={c} className={actual===c?"selected":""} aria-pressed={actual===c} onClick={()=>setCategory(c)}>{c}</button>)}</div>
  <div className="article-grid">{items.map(a=><a href={articleHref(a)} className="article-entry" key={a.id}><div className={`article-symbol tone-${categories.indexOf(a.category)}`}><Icon name={a.icon} size={21}/></div><div className="article-entry-main"><div className="entry-meta"><span>{a.category}</span><span>{a.minutes} 分钟</span></div><h2>{a.title}</h2><p>{a.summary}</p><div className="entry-bottom"><span>{a.level}</span><Icon name="arrow-right" size={16}/></div></div></a>)}</div>
  {!items.length&&<div className="empty-state"><Icon name="search" size={27}/><p>没有找到相关内容</p><button className="plain-button" onClick={()=>{setQuery("");setCategory("全部");}}>清除筛选</button></div>}
- <a href="/explore" className="explore-strip"><div><Icon name="compass"/><strong>带着问题，看前沿研究</strong></div><span>前沿探索<Icon name="arrow-right" size={15}/></span></a></div>;
+ <a href="/benchmarks" className="explore-strip"><div><Icon name="chart"/><strong>了解工具评测与模型表现</strong></div><span>Benchmark<Icon name="arrow-right" size={15}/></span></a></div>;
 }

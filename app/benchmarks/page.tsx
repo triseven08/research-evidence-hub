@@ -1,2 +1,5 @@
+import experiments from "../../content/experiments.json";
+import type {Experiment} from "../../lib/experiments";
+import {Icon} from "../ui/icons";
 import {BenchmarkCatalog} from "../ui/benchmark-catalog";
-export default function BenchmarksPage(){return <div className="benchmark-page"><div className="page-heading"><h1>Benchmark</h1></div><p className="article-lead">比较大规模工具发现与调用：任务如何进行，模型成绩应如何理解。</p><BenchmarkCatalog/></div>}
+export default function BenchmarksPage(){return <div className="benchmark-page"><div className="page-heading"><div className="page-icon"><Icon name="chart" size={30}/></div><h1>Benchmark</h1></div><p className="article-lead">比较大规模工具发现与调用：任务如何进行，模型成绩应如何理解。</p><BenchmarkCatalog/>{(experiments as Experiment[]).length>0&&<section className="experiment-section"><div className="section-heading"><h2>团队实测</h2></div><div className="results-table"><div className="results-table-head"><span>Benchmark</span><span>模型</span><span>成功 / 计划</span></div>{(experiments as Experiment[]).map(r=><a href={`/experiments/${r.run_id}`} className="results-row" key={r.run_id}><span>{r.benchmark}{r.scope==="subset"&&<small> · 子集</small>}</span><span>{r.model}</span><span>{r.counts.succeeded} / {r.counts.planned}</span></a>)}</div></section>}</div>}

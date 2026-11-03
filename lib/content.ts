@@ -37,7 +37,7 @@ export function retrieve(question: string, articleId?: string): Chunk[] {
     const hits=terms.filter(t=>body.includes(t)||heading.includes(t));
     const explicit=a.tags.filter(t=>t.length>=2&&question.toLowerCase().includes(t.toLowerCase()));
     const score=hits.reduce((s,t)=>s+(sectionHeading.includes(t)?6:0)+(heading.includes(t)?3:0)+(body.includes(t)?2:0),0)+explicit.filter(t=>body.includes(t.toLowerCase())).length*8+(articleId===a.id&&hits.length?2:0);
-    if(hits.length && (hits.length>=2 || explicit.length || hits.some(t=>t.length>=4))) chunks.push({id:a.id+"#"+section.id, articleId:a.id,articleTitle:a.title,anchor:section.id,title:section.title,text,score,href:a.href?`${a.href}#${section.id}`:undefined});
+    if(hits.length && (hits.length>=2 || explicit.length || hits.some(t=>t.length>=4))) chunks.push({id:a.id+"#"+section.id, articleId:a.id,articleTitle:a.title,anchor:section.id,title:section.title,text,score,href:a.href?`${a.href}?view=overview#${section.id}`:undefined});
   }
   for(const run of rawRuns as Experiment[]){
     const text=`团队实测：${run.benchmark}，模型 ${run.model}，${run.scope==="subset"?"任务子集":"完整任务集"}，${run.recorded_at}。${run.summary}\n计划 ${run.counts.planned}，成功 ${run.counts.succeeded}，任务失败 ${run.counts.task_failed}，环境失败 ${run.counts.environment_failed}，评分失败 ${run.counts.scoring_failed}，未运行 ${run.counts.not_run}。\n${run.metrics.map(m=>`${m.name}: ${m.value} ${m.unit}；口径：${m.denominator}`).join("\n")}\n方法 ${run.method}；评分器 ${run.scorer}；上游 ${run.upstream_commit}。`;
