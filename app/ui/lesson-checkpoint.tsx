@@ -9,11 +9,11 @@ import "./learning-map.css";
 export function LessonCheckpoint({ checkpoint, pathId, articleId, nextHref }: {
   checkpoint: Checkpoint; pathId: string; articleId: string; nextHref?: string;
 }) {
-  const { progress, complete } = useLearningProgress();
+  const { completed, complete } = useLearningProgress();
   const [selected, setSelected] = useState<number | null>(null);
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
   const [saved, setSaved] = useState(true);
-  const done = progress[pathId]?.includes(articleId);
+  const done = completed.includes(articleId);
 
   function submit(event: React.FormEvent) {
     event.preventDefault();

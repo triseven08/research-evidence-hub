@@ -16,6 +16,11 @@ export function parseLearningProgress(raw: string | null): LearningProgress {
   }
 }
 
+// Read all existing per-path records as shared article completions without discarding older progress.
+export function completedArticles(progress: LearningProgress): string[] {
+  return [...new Set(Object.values(progress).flat())];
+}
+
 export function pathProgress(lessonIds: string[], completed: string[] = []) {
   const done = new Set(completed);
   const count = lessonIds.filter(id => done.has(id)).length;

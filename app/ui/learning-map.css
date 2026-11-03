@@ -31,7 +31,6 @@
 .learning-map-finish{display:flex;align-items:center;justify-content:center;gap:12px;position:relative;padding:18px 0!important;margin:0!important;color:var(--secondary);font-size:13px;border-top:1px solid var(--border)}
 .learning-map-finish>span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--side)}
 .learning-map-finish.is-complete{color:#48613d}.learning-map-finish.is-complete>span{background:#e8eee4}
-.learning-save-note{font-size:12px;color:var(--secondary);text-align:center;margin-top:28px}
 .learning-article-context{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:24px;font-size:13px}
 .learning-article-context a{display:inline-flex;align-items:center;gap:8px;min-width:0}.learning-article-context span{color:var(--secondary);white-space:nowrap}
 .lesson-checkpoint{margin-top:38px;border-top:1px solid var(--border);padding-top:25px;scroll-margin-top:25px}

@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { articleById, paths } from "../lib/content.ts";
 import { checkpoints, learningPathForArticle } from "../lib/learning-paths.ts";
-import { completeCheckpoint, parseLearningProgress, pathProgress } from "../lib/learning-progress.ts";
+import { completedArticles, completeCheckpoint, parseLearningProgress, pathProgress } from "../lib/learning-progress.ts";
 
 test("learning progress tolerates missing, malformed, and obsolete browser data", () => {
   for (const raw of [null, "broken", "[]", "null", "42"]) assert.deepEqual(parseLearningProgress(raw), {});
@@ -11,14 +11,37 @@ test("learning progress tolerates missing, malformed, and obsolete browser data"
   assert.equal(pathProgress(["planning", "tool-calling"], progress["first-agent"]).count, 1);
 });
 
-test("passing a shared article records only the selected path and survives serialization", () => {
-  const first = completeCheckpoint({}, "first-agent", "planning");
-  const twice = completeCheckpoint(first, "first-agent", "planning");
-  assert.deepEqual(parseLearningProgress(JSON.stringify(twice)), { "first-agent": ["planning"] });
-  assert.equal(pathProgress(["planning"], twice["reliable-agent"]).count, 0);
-  const both = completeCheckpoint(twice, "reliable-agent", "planning");
-  assert.deepEqual(both["first-agent"], ["planning"]);
-  assert.deepEqual(both["reliable-agent"], ["planning"]);
+test("existing progress in path 01 immediately completes matching stages in path 02", () => {
+  const stored = '{"first-agent":["tool-discovery","planning"]}';
+  const completed = completedArticles(parseLearningProgress(stored));
+  const second = paths.find(path => path.id === "reliable-agent")!;
+  assert.deepEqual(pathProgress(second.ids, completed), {
+    count: 2, total: 4, nextId: "context-and-skills", percent: 50,
+  });
+  assert.deepEqual(completedArticles(parseLearningProgress(null)), []);
+});
+
+test("new completions are shared across all matching paths and survive serialization", () => {
+  let progress = completeCheckpoint({}, "first-agent", "tool-discovery");
+  progress = completeCheckpoint(progress, "first-agent", "planning");
+  progress = completeCheckpoint(progress, "reliable-agent", "context-and-skills");
+  progress = completeCheckpoint(progress, "research-frontiers", "reading-benchmarks");
+  const completed = completedArticles(parseLearningProgress(JSON.stringify(progress)));
+  assert.deepEqual(paths.map(path => pathProgress(path.ids, completed).count), [2, 4, 2]);
+  assert.equal(pathProgress(paths[1].ids, completed).nextId, undefined);
+  assert.equal(pathProgress(paths[2].ids, completed).nextId, "frontiers");
+  assert.ok(!completed.includes("what-is-agent"));
+});
+
+test("repeating the same article within or across paths does not double-count progress", () => {
+  let progress = completeCheckpoint({}, "first-agent", "planning");
+  progress = completeCheckpoint(progress, "first-agent", "planning");
+  progress = completeCheckpoint(progress, "reliable-agent", "planning");
+  const completed = completedArticles(progress);
+  assert.deepEqual(completed, ["planning"]);
+  assert.equal(pathProgress(paths[0].ids, completed).count, 1);
+  assert.equal(pathProgress(paths[1].ids, completed).count, 1);
+  assert.equal(pathProgress(paths[2].ids, completed).count, 0);
 });
 
 test("map recommends the first unfinished stage, including when later articles were passed first", () => {

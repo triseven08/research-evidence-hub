@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import { completeCheckpoint, LEARNING_PROGRESS_KEY, parseLearningProgress } from "../../lib/learning-progress";
+import { completedArticles, completeCheckpoint, LEARNING_PROGRESS_KEY, parseLearningProgress } from "../../lib/learning-progress";
 
 const changeEvent = "yanzhi:learning-progress";
 let temporaryProgress = "{}";
@@ -29,7 +29,7 @@ const serverSnapshot = () => "{}";
 
 export function useLearningProgress() {
   const raw = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
-  const progress = useMemo(() => parseLearningProgress(raw), [raw]);
+  const completed = useMemo(() => completedArticles(parseLearningProgress(raw)), [raw]);
 
   function complete(pathId: string, lessonId: string) {
     temporaryProgress = JSON.stringify(completeCheckpoint(parseLearningProgress(snapshot()), pathId, lessonId));
@@ -40,5 +40,5 @@ export function useLearningProgress() {
     return saved;
   }
 
-  return { progress, complete };
+  return { completed, complete };
 }

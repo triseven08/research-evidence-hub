@@ -7,9 +7,9 @@ import { Icon } from "./icons";
 import "./learning-map.css";
 
 export function LearningPathList({ paths }: { paths: LearningPath[] }) {
-  const { progress } = useLearningProgress();
+  const { completed } = useLearningProgress();
   return <div className="learning-path-list">{paths.map((path, index) => {
-    const state = pathProgress(path.ids, progress[path.id]);
+    const state = pathProgress(path.ids, completed);
     return <a className="learning-path-entry" href={`/paths/${path.id}`} key={path.id}>
       <span className="learning-path-number">0{index + 1}</span>
       <div className="learning-path-copy">
@@ -17,8 +17,8 @@ export function LearningPathList({ paths }: { paths: LearningPath[] }) {
         <h2>{path.title}</h2>
         <p>{path.summary}</p>
         <div className="learning-path-preview" aria-label={`${state.count} / ${state.total} 关已通过`}>
-          {path.ids.map((id, i) => <span key={id} className={progress[path.id]?.includes(id) ? "is-complete" : ""}>
-            {progress[path.id]?.includes(id) ? <Icon name="check" size={13} /> : i + 1}
+          {path.ids.map((id, i) => <span key={id} className={completed.includes(id) ? "is-complete" : ""}>
+            {completed.includes(id) ? <Icon name="check" size={13} /> : i + 1}
           </span>)}
           <span className="learning-path-count">{state.count} / {state.total}</span>
         </div>
@@ -29,8 +29,7 @@ export function LearningPathList({ paths }: { paths: LearningPath[] }) {
 }
 
 export function LearningMap({ path, lessons }: { path: LearningPath; lessons: LessonSummary[] }) {
-  const { progress } = useLearningProgress();
-  const completed = progress[path.id] || [];
+  const { completed } = useLearningProgress();
   const state = pathProgress(path.ids, completed);
   const next = lessons.find(lesson => lesson.id === state.nextId);
 
@@ -60,6 +59,5 @@ export function LearningMap({ path, lessons }: { path: LearningPath; lessons: Le
       })}
       <li className={`learning-map-finish ${state.count === state.total ? "is-complete" : ""}`}><span><Icon name="done" size={24} /></span>{state.count === state.total ? "已完成这条路径" : "完成全部关卡"}</li>
     </ol>
-    <p className="learning-save-note">进度保存在当前浏览器</p>
   </>;
 }
