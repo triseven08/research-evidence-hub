@@ -29,6 +29,8 @@ __pycache__/
 private-results/
 raw-results/
 upstream/
+.benchmark/
+paper-models.json
 *.log
 
 # Local files

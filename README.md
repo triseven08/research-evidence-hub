@@ -57,4 +57,6 @@ npm run import:experiment -- ./private-results/run.json
 
 项目仍按团队的周二至周四开发窗口规划。依据本地校园赛细则：周三晚应冻结演示，周四 12:00 截止修改；最新截止与材料要求以学校通知为准。交付需准备 README、源码、官方模板海报与不超过 3 分钟的视频。
 
+Benchmark 已新增容器内一键脚本：`bash scripts/run-benchmark.sh init` 创建配置，`bash scripts/run-benchmark.sh plan` 查看矩阵。按用户要求剔除 3 个不可调用模型，当前为 **9 模型 × 95 题的部分复现**，另含第二裁判与 7 裁判一致性评估。配置与运行见 [远程复现记录](docs/LiveMCPBench远程复现.md)，审计发现、修复与未验证项见 [提交前审计](docs/LiveMCPBench审计.md)。尚未执行远程 GPU/API 实测，也未生成可供网站回放的实测案例。
+
 本仓库原创内容采用 [MIT](LICENSE)；第三方资料遵循各自许可。原始实训附件与未脱敏日志不直接发布，论文报告成绩、团队实测和预设演示分开展示。
