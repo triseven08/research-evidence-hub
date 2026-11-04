@@ -38,6 +38,14 @@ npm run dev -- --port 5173 --hostname 127.0.0.1
 
 以上 SQL 只在新建本地库时按顺序执行一次。没有模型密钥时仍可阅读和播放回放；问答不会退化成无限制调用。仅本机测试时可在 `.dev.vars` 设置 `APP_ENV=testing`，额度提高到 1000 次/日、20 次/分钟，费用上限仍为 5 美元。
 
+`npm run dev` 会自行读取项目根目录的 `.dev.vars`（启动日志打印 `Using secrets defined in .dev.vars`）。`npm start` 使用 `dist/server/wrangler.json`，不读取根目录的 `.dev.vars`；缺少 `COOKIE_SECRET` 时 `/api/ask` 与 `/api/usage` 返回 503 `SERVER_CONFIGURATION_REQUIRED`，页面阅读不受影响。wrangler 4.92 的 `--env-file` 不会注入 Worker 变量（启动横幅只列出 `env.DB`），本机核对生产构建时改用 `--var` 显式传入：
+
+```powershell
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0 --var COOKIE_SECRET:<本机随机值> --var APP_ENV:testing
+```
+
+启动横幅应列出注入的变量，`/api/usage` 返回额度而非 503。密钥只在命令行本机传入，不要写进仓库文件。进度与提问历史按站点地址分别保存，`npm run dev`（5173）与 `npm start`（8787）互不共享，录制演示时固定使用同一个地址。
+
 `npm test` 检查额度、竞态、引用、检索与实验导入，`npm run typecheck` 检查类型。已完成 15 道真实模型验收题与两道修复复测；本地记录 16 次上游请求，按峰时费率保守核算约 0.0053 美元。版本差异题检验解释口径，不代表已经运行两个版本的 benchmark。
 
 ## 内容与实验
