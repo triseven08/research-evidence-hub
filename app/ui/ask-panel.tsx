@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Modal } from "./shell";
 import { Icon } from "./icons";
 import { articleById, articleHref } from "../../lib/content";
-import { historyAnswer } from "../../lib/ask-history";
+import { historyAnswer, answerLabel } from "../../lib/ask-history";
 import { useAskHistory } from "./ask-history";
 import "./ask-history.css";
 
@@ -86,11 +86,11 @@ export function AskPanel({ articleId, onClose }: { articleId?: string; onClose: 
               <button key={question} onClick={() => { setDraft(question); input.current?.focus(); }}>{question}<Icon name="arrow-up-right" size={14} /></button>)}</div>
         </div>}
         {selected && <div className="question-bubble">{selected.question}</div>}
-        {waiting && <div className="answer-loading" role="status"><span className="loading-dot" />正在查资料…</div>}
+        {waiting && <div className="answer-loading" role="status"><span className="loading-dot" />正在回答…</div>}
         {error && <div className="answer-error" role="alert"><Icon name="warning" size={18} /><p>{error}</p></div>}
         {answer && <div className="answer-content" aria-live="polite">
-          <div className="answer-byline"><Icon name={answer.status === "answered" ? "book" : "search"} size={16} />
-            <span>{answer.status === "answered" ? "根据知识库回答" : "资料不足"}</span>{answer.cached && <span className="muted">来自缓存</span>}</div>
+          <div className="answer-byline"><Icon name={answerLabel(answer) === "根据知识库回答" ? "book" : "ask"} size={16} />
+            <span>{answerLabel(answer)}</span>{answer.cached && <span className="muted">来自缓存</span>}</div>
           <div className="answer-text">{answer.answer.split(/(\[S\d+\])/g).map((part, index) => {
             const citation = answer.citations.find(citation => `[${citation.id}]` === part);
             return citation ? <a key={index} href={citation.href || `/knowledge/${citation.article_id}#${encodeURIComponent(citation.anchor)}`} className="inline-citation" onClick={onClose}>{part}</a> : <span key={index}>{part}</span>;
@@ -106,7 +106,7 @@ export function AskPanel({ articleId, onClose }: { articleId?: string; onClose: 
       <label className="sr-only" htmlFor="question">输入问题</label>
       <textarea id="question" ref={input} value={history.draft} maxLength={2000} placeholder="输入你的问题…" onChange={event => setDraft(event.target.value)}
         onKeyDown={event => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); void submit(); } }} />
-      <div className="compose-bottom"><span>{quota ? (quota.remaining === 0 ? "北京时间 00:00 恢复提问额度" : `今日剩余 ${quota.remaining} / ${quota.limit} 次`) : "回答会附带来源"}</span>
+      <div className="compose-bottom"><span>{quota ? (quota.remaining === 0 ? "北京时间 00:00 恢复提问额度" : `今日剩余 ${quota.remaining} / ${quota.limit} 次`) : "有资料依据时附带来源"}</span>
         <button className="send-button" type="submit" disabled={busy || !history.draft.trim()} aria-label="发送问题"><Icon name="send" size={16} /></button>
       </div>
     </form>
