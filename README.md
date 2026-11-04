@@ -26,17 +26,47 @@ benchmark 展示保留预先录制的工具调用回放：查看任务的工具�
 
 ## 本地运行
 
-需要 Node.js 22.13+。安装后，将 `.env.example` 复制为 `.env.local`，填写自己的 `DEEPSEEK_API_KEY`，并为 `COOKIE_SECRET` 生成至少 24 字符的随机值；再将配置复制为 `.dev.vars`，供本地 Worker 读取。两份文件均被 Git 忽略，不互相发送密钥。
+需要 Node.js 22.13+。本地答疑只需要一个模型密钥：
 
 ```powershell
-npm run install:ci
+npm ci
+copy .env.example .dev.vars   # 填入 DEEPSEEK_API_KEY
+npm run dev                   # http://127.0.0.1:5173
+```
+
+本地访问时服务端会自动使用**进程内存储**代替 D1，并允许省略 `COOKIE_SECRET`（使用固定的本地开发密钥）。因此不必建库、不必跑迁移，知识库、学习路径、回放和带引用答疑都能直接使用。进程重启后额度与回答缓存清零；生产环境仍然使用 D1。
+
+### 本地 API 配置选项
+
+本地开发读取 `.dev.vars`（由 Wrangler/Vite 插件注入 Worker 环境）；`.env.local` 只用于本机脚本与构建工具。两份文件都被 Git 忽略，不要提交真实密钥。
+
+| 变量 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `DEEPSEEK_API_KEY` | 提问必填 | 空 | 仅服务端读取。为空时浏览与回放正常，提问返回「答疑服务暂不可用」 |
+| `DEEPSEEK_MODEL` | 否 | `deepseek-flash` | 必须是该值，否则服务端返回「答疑服务尚未配置完成」 |
+| `COOKIE_SECRET` | 生产必填 | 本地使用内置开发值 | 至少 24 字符；本地省略时自动使用开发密钥 |
+| `QUOTA_STORE` | 否 | 本地为 `memory` | 设为 `d1` 可在本地使用真实 D1 存储 |
+| `APP_ENV` | 否 | `production` | 设为 `testing` 且仅本机访问时启用提高后的额度 |
+| `DEEPSEEK_BASE_URL` | 否 | `https://api.deepseek.com` | 代理或兼容端点 |
+| `DEEPSEEK_MAX_OUTPUT_TOKENS` | 否 | `2000` | 单次输出上限 |
+| `API_USER_DAILY_LIMIT` / `API_TEST_USER_DAILY_LIMIT` | 否 | 100 / 1000 | 每位访客每日次数 |
+| `API_USER_MINUTE_LIMIT` / `API_TEST_USER_MINUTE_LIMIT` | 否 | 3 / 20 | 每位访客每分钟次数 |
+| `API_IP_DAILY_LIMIT` / `API_TEST_IP_DAILY_LIMIT` | 否 | 500 / 3000 | 单个 IP 每日次数 |
+| `API_IP_MINUTE_LIMIT` / `API_TEST_IP_MINUTE_LIMIT` | 否 | 10 / 60 | 单个 IP 每分钟次数 |
+| `API_SITE_DAILY_LIMIT` / `API_TEST_SITE_DAILY_LIMIT` | 否 | 1000 / 3000 | 全站每日次数 |
+| `API_SITE_DAILY_BUDGET_USD` | 否 | `5.00` | 全站每日费用护栏 |
+| `API_USER_CONCURRENCY` / `API_SITE_CONCURRENCY` | 否 | 1 / 2 | 并发上限 |
+| `API_QUESTION_MAX_CHARS` | 否 | `2000` | 问题长度上限 |
+| `API_CONTEXT_MAX_TOKENS` | 否 | `4000` | 检索证据预算 |
+| `API_TIMEOUT_SECONDS` | 否 | `30` | 上游超时 |
+
+需要与生产一致的 D1 行为时，在 `.dev.vars` 增加 `QUOTA_STORE=d1`，并按顺序执行一次迁移：
+
+```powershell
 npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_watery_vermin.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_careless_xorn.sql
-npm run dev -- --port 5173 --hostname 127.0.0.1
 ```
-
-以上 SQL 只在新建本地库时按顺序执行一次。没有模型密钥时仍可阅读和播放回放；问答不会退化成无限制调用。仅本机测试时可在 `.dev.vars` 设置 `APP_ENV=testing`，额度提高到 1000 次/日、20 次/分钟，费用上限仍为 5 美元。
 
 `npm test` 检查额度、竞态、引用、检索与实验导入，`npm run typecheck` 检查类型。已完成 15 道真实模型验收题与两道修复复测；本地记录 16 次上游请求，按峰时费率保守核算约 0.0053 美元。版本差异题检验解释口径，不代表已经运行两个版本的 benchmark。
 
