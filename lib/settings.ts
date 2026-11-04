@@ -10,7 +10,7 @@ export function settings(env:Env={},hostname="") {
     ipDay:choose("API_IP_DAILY_LIMIT","API_TEST_IP_DAILY_LIMIT",500,3000),ipMinute:choose("API_IP_MINUTE_LIMIT","API_TEST_IP_MINUTE_LIMIT",10,60),siteDay:choose("API_SITE_DAILY_LIMIT","API_TEST_SITE_DAILY_LIMIT",1000,3000),
     userConcurrency:bounded(env.API_USER_CONCURRENCY,1,1,2),siteConcurrency:bounded(env.API_SITE_CONCURRENCY,2,1,5),
     budgetMicro: Math.round(Math.max(0,Math.min(5,Number(env.API_SITE_DAILY_BUDGET_USD||5)||0))*1_000_000),
-    inputBudget:bounded(env.API_CONTEXT_MAX_TOKENS,4000,512,4000),outputCap:bounded(env.DEEPSEEK_MAX_OUTPUT_TOKENS,2000,128,2000),
+    inputBudget:bounded(env.API_CONTEXT_MAX_TOKENS,12000,512,12000),outputCap:bounded(env.DEEPSEEK_MAX_OUTPUT_TOKENS,2000,128,2000),
     maxQuestion:bounded(env.API_QUESTION_MAX_CHARS,2000,50,2000),timeoutMs:bounded(env.API_TIMEOUT_SECONDS,30,5,30)*1000,
   };
 }

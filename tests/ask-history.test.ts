@@ -1,12 +1,24 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Answer } from "../lib/ask.ts";
-import { ASK_HISTORY_LIMIT, beginHistoryQuestion, emptyAskHistory, finishHistoryQuestion, historyAnswer, parseAskHistory } from "../lib/ask-history.ts";
+import { ASK_HISTORY_LIMIT, beginHistoryQuestion, emptyAskHistory, finishHistoryQuestion, historyAnswer, parseAskHistory, answerLabel } from "../lib/ask-history.ts";
 
 const answer: Answer = { status: "answered", answer: "一个 MCP Server 可以提供多个工具。[S1]", citations: [
   { id: "S1", article_id: "mcp-architecture", title: "MCP 连接了什么", anchor: "roles", excerpt: "一个 Server 可以暴露多个工具。", href: "/knowledge/mcp-architecture#roles" },
 ] };
 const begin = (id = "question-1", createdAt = 1000) => ({ id, createdAt, question: "MCP Server 和工具有什么区别？", articleId: "mcp-architecture" });
+
+test("answer basis survives storage and labels distinguish reference, project, general and legacy answers", () => {
+  for (const [basis, label] of [["knowledge", "根据知识库回答"], ["project", "研知台助手"], ["general", "研知台助手"], ["reference", "参考回答"]] as const) {
+    const result = { ...answer, basis };
+    const restored = parseAskHistory(JSON.stringify(finishHistoryQuestion(beginHistoryQuestion(emptyAskHistory(), begin()), "question-1", { answer: result })));
+    assert.equal(restored.entries[0].answer?.basis, basis);
+    assert.equal(answerLabel(restored.entries[0].answer!), label);
+  }
+  assert.equal(answerLabel(answer), "根据知识库回答");
+  assert.equal(answerLabel({ status: "insufficient_evidence", answer: "旧版资料不足", citations: [] }), "资料不足");
+  assert.equal(historyAnswer({ ...answer, basis: "unknown" }), null);
+});
 
 test("questions, answers, citations, selected record and drafts survive closing and reloading", () => {
   const started = beginHistoryQuestion({ ...emptyAskHistory(), draft: "MCP Server 和工具有什么区别？" }, begin());

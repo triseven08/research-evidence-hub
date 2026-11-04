@@ -26,6 +26,7 @@ export function emptyAskHistory(): AskHistory {
 export function historyAnswer(value: unknown): Answer | null {
   if (!isObject(value) || !["answered", "insufficient_evidence"].includes(String(value.status)) ||
     !text(value.answer, 14000) || !value.answer.trim() || !Array.isArray(value.citations) || value.citations.length > 30) return null;
+  if (value.basis !== undefined && !["knowledge", "project", "general", "reference"].includes(String(value.basis))) return null;
   const citations: Citation[] = [];
   for (const citation of value.citations) {
     if (!isObject(citation) || !/^S\d+$/.test(String(citation.id)) || !validId(citation.article_id) ||
@@ -37,7 +38,14 @@ export function historyAnswer(value: unknown): Answer | null {
       anchor: citation.anchor, excerpt: citation.excerpt, ...(href ? { href } : {}) });
   }
   return { status: value.status as Answer["status"], answer: value.answer, citations,
+    ...(typeof value.basis === "string" ? { basis: value.basis as Answer["basis"] } : {}),
     ...(typeof value.cached === "boolean" ? { cached: value.cached } : {}) };
+}
+
+export function answerLabel(answer: Answer): string {
+  if (answer.basis === "reference") return "参考回答";
+  if (answer.basis === "project" || answer.basis === "general") return "研知台助手";
+  return answer.status === "answered" ? "根据知识库回答" : "资料不足";
 }
 
 function historyEntry(value: unknown): AskHistoryEntry | null {
