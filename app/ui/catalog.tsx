@@ -1,9 +1,12 @@
 "use client";
-import {useState,useEffect} from "react";
+import {useState} from "react";
 import {useSearchParams} from "next/navigation";
 import {searchArticles,categories,paths,articleById,articleHref,articles} from "../../lib/content";
 import {Icon} from "./icons";
-export function Catalog(){const params=useSearchParams();const paramCategory=params.get("category")||"全部";const [category,setCategory]=useState(paramCategory),[query,setQuery]=useState("");useEffect(()=>{setCategory(paramCategory);},[paramCategory]);const actual=["全部",...categories].includes(category)?category:"全部";const items=searchArticles(query,actual);const firstPath=paths[0];
+export function Catalog(){const params=useSearchParams();const paramCategory=params.get("category")||"全部";const [category,setCategory]=useState(paramCategory),[query,setQuery]=useState("");const [lastParam,setLastParam]=useState(paramCategory);
+ // 侧栏主题链接改变 ?category= 时跟随 URL；用户在页内点筛选后仍以本地选择为准。
+ if(paramCategory!==lastParam){setLastParam(paramCategory);setCategory(paramCategory);}
+ const actual=["全部",...categories].includes(category)?category:"全部";const items=searchArticles(query,actual);const firstPath=paths[0];
  return <div className="catalog-page"><div className="page-heading"><div className="page-icon"><Icon name="book" size={30}/></div><h1>知识库</h1><span className="heading-count">{articles.length} 篇内容</span></div>
  <a href="/paths/first-agent" className="start-path"><div className="path-feature-copy"><div className="feature-label"><Icon name="route" size={15}/>入门路径</div><h2>从第一次工具调用开始<Icon name="arrow-up-right" size={19}/></h2><div className="path-meta">{firstPath.ids.length} 个单元<span>·</span>约 {firstPath.ids.reduce((n,id)=>n+(articleById(id)?.minutes||0),0)} 分钟</div></div><div className="mini-process" aria-hidden="true"><span><Icon name="ask"/>提出问题</span><i/><span><Icon name="wrench"/>调用工具</span><i/><span><Icon name="check"/>得到结果</span></div></a>
  <div className="catalog-tools"><div className="catalog-search"><Icon name="search" size={16}/><input aria-label="搜索知识库" placeholder="搜索知识…" value={query} onChange={e=>setQuery(e.target.value)}/>{query&&<button className="icon-button" aria-label="清除搜索" onClick={()=>setQuery("")}><Icon name="x" size={14}/></button>}</div><span className="result-count">{items.length} 篇</span></div>
