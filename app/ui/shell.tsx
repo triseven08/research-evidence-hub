@@ -1,6 +1,6 @@
 "use client";
 import {useState,useEffect,useRef,createContext,useContext,useCallback} from "react";
-import {usePathname} from "next/navigation";
+import {usePathname,useSearchParams} from "next/navigation";
 import {articles,categories,searchArticles,articleHref,paths} from "../../lib/content";
 import {Icon} from "./icons";
 import {AskPanel} from "./ask-panel";
@@ -12,13 +12,15 @@ export function Modal({children,onClose,label,drawer=false}:{children:React.Reac
  return <div className={`overlay ${drawer?"drawer-overlay":""}`} onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}><div ref={ref} role="dialog" aria-modal="true" aria-label={label} className={drawer?"ask-panel":"search-dialog"}>{children}</div></div>;
 }
 export function Shell({children}:{children:React.ReactNode}) {
- const pathname=usePathname();const [search,setSearch]=useState(false),[ask,setAsk]=useState(false),[menu,setMenu]=useState(false),[query,setQuery]=useState("");
+ const pathname=usePathname();const searchParams=useSearchParams();const [search,setSearch]=useState(false),[ask,setAsk]=useState(false),[menu,setMenu]=useState(false),[query,setQuery]=useState("");
  const closeSearch=useCallback(()=>setSearch(false),[]),closeAsk=useCallback(()=>setAsk(false),[]);
  const articleId=pathname?.startsWith("/knowledge/")?pathname.split("/")[2]:undefined;
- const [learningPathId,setLearningPathId]=useState<string>();
- useEffect(()=>{const id=new URLSearchParams(window.location.search).get("path");setLearningPathId(paths.find(p=>p.id===id&&p.ids.includes(articleId||""))?.id);},[pathname,articleId]);
+ // 面包屑所属分区由当前地址推导，渲染期直接计算，避免 effect 回填造成的二次渲染。
+ const learningPathId=paths.find(p=>p.id===searchParams.get("path")&&p.ids.includes(articleId||""))?.id;
+ const [lastPathname,setLastPathname]=useState(pathname);
+ // 跨页跳转后收起移动端抽屉导航。
+ if(pathname!==lastPathname){setLastPathname(pathname);if(menu)setMenu(false);}
  const article=articles.find(a=>a.id===articleId);const mode=pathname?.startsWith("/paths")||learningPathId?"学习路径":pathname?.startsWith("/benchmarks")||pathname?.startsWith("/replays")||pathname?.startsWith("/experiments")?"Benchmark":"知识库";
- useEffect(()=>{setMenu(false);},[pathname]);
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();setSearch(v=>!v);}};window.addEventListener("keydown",handler);return()=>window.removeEventListener("keydown",handler);},[]);
  return <AskContext.Provider value={()=>setAsk(true)}><div className="workspace"><a className="skip-link" href="#main">跳转到内容</a>
  <aside className={`sidebar ${menu?"is-open":""}`} aria-label="主导航"><a href="/" className="brand"><span className="brand-mark">研</span><span>研知台</span><span className="brand-dot"/></a>

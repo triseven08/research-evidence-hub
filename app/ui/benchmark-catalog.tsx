@@ -1,11 +1,13 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useState} from "react";
+import {useSearchParams} from "next/navigation";
 import {benchmarks} from "../../lib/benchmarks";
 import {Icon} from "./icons";
 import {benchmarkTags,benchmarkTagIds,tagsFor} from "../../lib/benchmark-tags";
 export function BenchmarkCatalog(){
- const [selected,setSelected]=useState<string[]>([]);
- useEffect(()=>{const tag=new URLSearchParams(window.location.search).get("tag");if(tag&&benchmarkTags.some(t=>t.id===tag))setSelected([tag]);},[]);
+ // 初始标签来自 ?tag=，在渲染期读取；用 effect 回填会多一次渲染并触发级联更新。
+ const requested=useSearchParams().get("tag");
+ const [selected,setSelected]=useState<string[]>(requested&&benchmarkTags.some(t=>t.id===requested)?[requested]:[]);
  const toggle=(id:string)=>setSelected(current=>current.includes(id)?current.filter(t=>t!==id):[...current,id]);
  const visible=benchmarks.filter(b=>selected.every(id=>benchmarkTagIds[b.id]?.includes(id)));
  return <><section className="tag-filter" aria-label="按标签筛选"><div className="section-heading"><h2>按标签筛选</h2>{selected.length>0&&<button onClick={()=>setSelected([])}>清除筛选</button>}</div>{["工具环境","评测目标","发现方式"].map(group=><div className="tag-group" key={group}><span>{group}</span><div>{benchmarkTags.filter(t=>t.group===group).map(tag=><button type="button" aria-pressed={selected.includes(tag.id)} onClick={()=>toggle(tag.id)} className={selected.includes(tag.id)?"benchmark-chip selected":"benchmark-chip"} key={tag.id}>{tag.label}</button>)}</div></div>)}<details className="tag-guide"><summary>标签说明</summary><dl>{benchmarkTags.map(t=><div key={t.id}><dt>{t.label}</dt><dd>{t.description}</dd></div>)}</dl></details></section>
